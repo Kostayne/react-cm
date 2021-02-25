@@ -1,7 +1,6 @@
 import {Command, flags} from '@oclif/command';
-import { getComponentPath } from "../paths";
-import { validateChooseArg } from '../chooseArg';
-import * as paths from "../paths";
+import { validateChooseArg } from '../api/chooseArg';
+import * as paths from "../api/paths";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -21,7 +20,7 @@ export default class CreateComponent extends Command {
     // TODO
     // HAVE TO LOAD DATA FROM CFG
     const {args, flags} = this.parse(CreateComponent);
-    const componentPath = getComponentPath(args.name);
+    const componentPath = paths.getComponentPath(args.name);
 
     validateChooseArg(args.basedOn, this.basedOnOptions);
 
