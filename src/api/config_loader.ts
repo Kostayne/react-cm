@@ -1,8 +1,8 @@
 import { IReactPMConfig, IReactPMconfigField } from "./cfg";
 import { validateChooseArg } from "./chooseArg";
+import { parseExternalJSON } from "./external_json_parser";
 import { IReactPMConfigFinder } from "./config_finder";
 import * as paths from "./paths";
-import * as fs from "fs";
 
 export interface IReactPMConfigLoader {
     loadCfg(): Promise<IReactPMConfig>;
@@ -57,12 +57,16 @@ export class ReactPMConfigLoader implements IReactPMConfigLoader {
 
     public async loadCfg(): Promise<IReactPMConfig> {
         try {
-            const data = await (await fs.promises.readFile(paths.configPath)).toString();
-            const config = JSON.parse(data);
-            const schemaConfig = this.addDefaultFields(config);
-    
-            this.verifyConfig(schemaConfig);
-            return schemaConfig;
+            const cfgPath = await this.configFinder.findConfig();
+
+            if (cfgPath == paths.packagePath) {
+                const cfg = (await parseExternalJSON(cfgPath)).reactPM;
+            }
+
+            const cfg = cfgPath == paths.packagePath? (await parseExternalJSON(cfgPath)).reactPM : await parseExternalJSON(cfgPath);
+            this.addDefaultFields(cfg);
+            this.verifyConfig(cfg);
+            return cfg;
         }
     
         catch(e) {
