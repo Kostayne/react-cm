@@ -6,6 +6,7 @@ import * as paths from "../api/paths";
 import { CreateBackendArgs, runCreateComponentBackend } from '../commands_backend/create_backend';
 import { ReactPMConfigLoader } from '../api/config_loader';
 import { ReactPMConfigFinder } from '../api/config_finder';
+import { TemplateLoader } from '../api/template_loader';
 
 export default class CreateComponent extends Command {
   static description = 'creates component $name $based-on';
@@ -28,6 +29,6 @@ export default class CreateComponent extends Command {
     const finder = new ReactPMConfigFinder();
     const loader = new ReactPMConfigLoader(finder);
 
-    runCreateComponentBackend(loader, args as CreateBackendArgs);
+    runCreateComponentBackend(loader, new TemplateLoader(), args as CreateBackendArgs);
   }
 }

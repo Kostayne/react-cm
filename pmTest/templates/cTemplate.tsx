@@ -1,6 +1,6 @@
 import React from "react";
 
-export class $_CNAME_ extends React.Component {
+export class %CNAME% extends React.Component {
     render() {
         return (
             <div>

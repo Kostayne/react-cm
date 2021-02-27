@@ -1,6 +1,6 @@
 import React from "react";
 
-export const $_CNAME_ = () => {
+export const %CNAME% = () => {
     return (
         <div>
             <p>Text</p>
