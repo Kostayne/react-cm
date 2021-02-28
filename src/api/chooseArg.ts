@@ -1,5 +1,5 @@
-export function isInOptions(arg: string, chooses: string[]) {
-    for (let i = 0; i < chooses.length - 1; i++) {
+export function isInOptions(arg: string, chooses: string[]): boolean {
+    for (let i = 0; i <= chooses.length - 1; i++) {
         if (chooses[i] == arg) return true;
     }
 
