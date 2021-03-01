@@ -1,6 +1,6 @@
 {
   "name": "react-cm",
-  "description": "manages your project from cli",
+  "description": "manages your project components from cli",
   "version": "1.0.0",
   "author": "kostayne",
   "bin": {

@@ -4,6 +4,9 @@ react-component-manager (react-cm)
 Manages your react components from cli. Easy to configure and extend.
 
 <!-- shileds -->
+![npm bundle size](https://img.shields.io/bundlephobia/min/react-cm)
+![npm](https://img.shields.io/npm/dm/react-cm)
+![NPM](https://img.shields.io/npm/l/react-cm)
 
 * [Start](#Start)
 * [Usage](#Usage)
