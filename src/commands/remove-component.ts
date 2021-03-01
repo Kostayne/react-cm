@@ -1,4 +1,7 @@
 import {Command, flags} from '@oclif/command';
+import { ReactPMConfigFinder } from '../api/config_finder';
+import { ReactPMConfigLoader } from '../api/config_loader';
+import { RemoveBackend, RemoveBackendArgs } from "../commands_backend/remove_backend";
 
 export default class RemoveComponent extends Command {
     static description = `removes component $name`;
@@ -12,6 +15,7 @@ export default class RemoveComponent extends Command {
 
     async run() {
         const {args, flags} = this.parse(RemoveComponent);
-        console.log(`- ${args.name}`);
+        const backend = new RemoveBackend(new ReactPMConfigLoader(new ReactPMConfigFinder()), args as RemoveBackendArgs);
+        await backend.removeComponent();
     }
 }

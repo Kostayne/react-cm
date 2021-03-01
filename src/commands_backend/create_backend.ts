@@ -4,7 +4,6 @@ import { IReactPMTeplateLoader, ReactPMTemplateLoader, ReactPM_TSX_TemplateLoade
 import { IReactPMConfig } from "../api/cfg";
 import * as path from "path";
 import * as fs from "fs";
-import { pascalCase } from "pascal-case";
 
 export interface CreateBackendArgs {
     name: string;
