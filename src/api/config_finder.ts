@@ -2,14 +2,14 @@ import {  isFileExists } from "./is_file_exists";
 import { parseExternalJSON } from "./external_json_parser";
 import * as paths from "./paths";
 
-export interface IReactPMConfigFinder {
+export interface IReactCMConfigFinder {
     findConfig(): Promise<string>;
 }
 
-export class ReactPMConfigFinder implements IReactPMConfigFinder {
+export class ReactCMConfigFinder implements IReactCMConfigFinder {
     protected async isCfgInNpmPackage(): Promise<boolean> {
         const userPackage = await parseExternalJSON(paths.packagePath);
-        return userPackage.reactPM != null && userPackage.reactPM != undefined;
+        return userPackage.reactCM != null && userPackage.reactCM != undefined && typeof userPackage.reactCM == "object";
     }
 
     async findConfig(): Promise<string> {
@@ -19,6 +19,6 @@ export class ReactPMConfigFinder implements IReactPMConfigFinder {
         if (seperateCfgExists) return paths.configPath;
         if (npmPackageCfgExists) return paths.packagePath;
 
-        throw "Config not found";
+        return Promise.reject(new Error("Config not found"));
     }
 }

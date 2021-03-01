@@ -1,12 +1,12 @@
 {
-  "name": "cli-project-manager",
+  "name": "react-cm",
   "description": "manages your project from cli",
   "version": "1.0.0",
   "author": "kostayne",
   "bin": {
     "cli-pm": "./bin/run"
   },
-  "bugs": "https://github.com/Kostayne/cli-project-manager/issues",
+  "bugs": "https://github.com/Kostayne/react-cm/issues",
   "dependencies": {
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
@@ -23,6 +23,7 @@
     "@types/chai": "^4.2.15",
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.54",
+    "@types/react": "^17.0.2",
     "chai": "^4.3.0",
     "eslint": "^5.16.0",
     "eslint-config-oclif": "^3.1.0",
@@ -30,6 +31,7 @@
     "globby": "^10.0.2",
     "mocha": "^5.2.0",
     "nyc": "^14.1.1",
+    "react": "^17.0.1",
     "rimraf": "^3.0.2",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.9"
@@ -43,7 +45,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/Kostayne/cli-project-manager",
+  "homepage": "https://github.com/Kostayne/react-cm",
   "keywords": [
     "oclif"
   ],
@@ -56,7 +58,7 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "Kostayne/cli-project-manager",
+  "repository": "Kostayne/react-cm",
   "scripts": {
     "dev": "tsc",
     "generate-template": "oclif multi",

@@ -1,5 +1,5 @@
-import { IReactPMConfig } from "../api/cfg";
-import { IReactPMConfigLoader } from "../api/config_loader";
+import { IReactCMConfig } from "../api/cfg";
+import { IReactCMConfigLoader } from "../api/config_loader";
 import * as rimraf from "rimraf";
 import * as globby from "globby";
 import * as path from "path";
@@ -15,11 +15,11 @@ export interface RemoveBackendArgs {
 }
 
 export class RemoveBackend implements IRemoveBackend {
-    protected cfgLoader: IReactPMConfigLoader;
+    protected cfgLoader: IReactCMConfigLoader;
     protected args: RemoveBackendArgs;
-    protected cfg: IReactPMConfig | null = null;
+    protected cfg: IReactCMConfig | null = null;
 
-    constructor(cfgLoader: IReactPMConfigLoader, args: RemoveBackendArgs) {
+    constructor(cfgLoader: IReactCMConfigLoader, args: RemoveBackendArgs) {
         this.cfgLoader = cfgLoader;
         this.args = args;
     }

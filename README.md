@@ -1,70 +1,63 @@
-cli-project-manager
+react-component-manager (react-cm)
 ===================
 
-manages your project from cli
+Manages your react components from cli. Easy to configure and extend.
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/cli-project-manager.svg)](https://npmjs.org/package/cli-project-manager)
-[![Downloads/week](https://img.shields.io/npm/dw/cli-project-manager.svg)](https://npmjs.org/package/cli-project-manager)
-[![License](https://img.shields.io/npm/l/cli-project-manager.svg)](https://github.com/Kostayne/cli-project-manager/blob/master/package.json)
+<!-- shileds -->
 
-<!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
+* [Start](#Start)
+* [Usage](#Usage)
+* [Commands](#Commands)
+* [Sources](#Sources)
+
+# Start
+First of all install the package from npm.
+
+```
+npm i react-cm
+```
+
+Then setup the config. You can do this in two ways. By creating seperated react-cm.json file in the project root or by creating reactCm field in "package.json". After that fill the config.
+
+``` ts
+// cfg exmaple
+{
+    // use double slashes on windows
+    "cTemplate": "C:\\Users\\usr\\Desktop\\project\\src\\templates\\complex_template",
+    "fnTemplate": "C:\\Users\\usr\\Desktop\\project\\src\\templates\\fnTemplate.tsx",
+    "components": "C:\\Users\\usr\\Desktop\\project\\src\\components"
+}
+```
+
 # Usage
-<!-- usage -->
-```sh-session
-$ npm install -g cli-project-manager
-$ cli-pm COMMAND
-running command...
-$ cli-pm (-v|--version|version)
-cli-project-manager/1.0.0 win32-x64 node-v14.15.5
-$ cli-pm --help [COMMAND]
-USAGE
-  $ cli-pm COMMAND
-...
+If you want to create complex component (more than single file) then create a directory. Move component files into it. And specify template path (fn or class) to that dir full path. Done!
+
+Want to use name from argument (in pascal case)? Insert %CNAME% into the template an it will be replaced with a component name.
+
+``` tsx
+// template example
+import React from "react";
+
+export const %CNAME% = () => {
+    return (
+        <div>
+            <p>Text</p>
+        </div>
+    );
+}
 ```
-<!-- usagestop -->
+
 # Commands
-<!-- commands -->
-* [`cli-pm hello [FILE]`](#cli-pm-hello-file)
-* [`cli-pm help [COMMAND]`](#cli-pm-help-command)
-
-## `cli-pm hello [FILE]`
-
-describe the command here
-
 ```
-USAGE
-  $ cli-pm hello [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-
-EXAMPLE
-  $ cli-pm hello
-  hello world from ./src/hello.ts!
+// commands
+react-cm help //to display help
+react-cm $command $args // syntaxis
+react-cm create-c $name (class or fn)
+react-cm remove-c $name
 ```
 
-_See code: [src/commands/hello.ts](https://github.com/Kostayne/cli-project-manager/blob/v1.0.0/src/commands/hello.ts)_
+Will there be updates?
+Yes, they will be someday. I want to add dynamic templates (custom types).
 
-## `cli-pm help [COMMAND]`
 
-display help for cli-pm
-
-```
-USAGE
-  $ cli-pm help [COMMAND]
-
-ARGUMENTS
-  COMMAND  command to show help for
-
-OPTIONS
-  --all  see all commands in CLI
-```
-
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
-<!-- commandsstop -->
+[:octocat: github](https://github.com/Kostayne/react-cm)

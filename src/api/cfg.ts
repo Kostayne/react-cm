@@ -1,11 +1,11 @@
-export interface IReactPMconfigField<T> {
+export interface IReactCMconfigField<T> {
     name: string;
     default?: T;
     isRequired?: boolean;
     chooses?: string[];
 }
 
-export interface IReactPMConfig {
+export interface IReactCMConfig {
     cTemplate: string;
     fnTemplate: string;
     components: string;

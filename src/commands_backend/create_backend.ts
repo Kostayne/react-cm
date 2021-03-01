@@ -1,7 +1,7 @@
-import { IReactPMConfigLoader } from "../api/config_loader";
+import { IReactCMConfigLoader } from "../api/config_loader";
 import { isFileExists } from "../api/is_file_exists";
-import { IReactPMTeplateLoader, ReactPMTemplateLoader, ReactPM_TSX_TemplateLoader } from "../api/template_loader";
-import { IReactPMConfig } from "../api/cfg";
+import { IReactCMTeplateLoader, ReactCMTemplateLoader, ReactCM_TSX_TemplateLoader } from "../api/template_loader";
+import { IReactCMConfig } from "../api/cfg";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -15,18 +15,23 @@ export interface ICreateComponentBackend {
 }
 
 export class CreateComponentBackend implements ICreateComponentBackend {
-    protected cfgLoader: IReactPMConfigLoader;
+    protected cfgLoader: IReactCMConfigLoader;
     protected args: CreateBackendArgs;
     protected templatePath: string = "";
-    protected cfg: IReactPMConfig | null = null;
+    protected cfg: IReactCMConfig | null = null;
 
-    constructor(cfgLoader: IReactPMConfigLoader, args: CreateBackendArgs) {
+    constructor(cfgLoader: IReactCMConfigLoader, args: CreateBackendArgs) {
         this.cfgLoader = cfgLoader;
         this.args = args;
     }
 
     async createComponent() {
-        this.cfg = await this.cfgLoader.loadCfg();
+        try {
+            this.cfg = await this.cfgLoader.loadCfg();
+        } catch(e) {
+            return console.error(e);
+        }
+
         this.templatePath = this.args.basedOn == "class"? this.cfg.cTemplate : this.cfg.fnTemplate;
 
         let templateStat: fs.Stats | null = null;
@@ -37,15 +42,19 @@ export class CreateComponentBackend implements ICreateComponentBackend {
 
         catch(e) {
             if (e.code == "ENOENT") {
-                return Promise.reject(new Error("Template not exists"));
+                return console.error("Template not exists");
             }
 
-            return Promise.reject(e);
+            return console.error(e);
         }
 
         if (!templateStat) return;
 
-        if (await this.isComponentExists(templateStat)) return console.log("Already exists");
+        try {
+            if (await this.isComponentExists(templateStat)) return console.log("Already exists");
+        } catch(e) {
+            return console.error(e);
+        }
 
         if (templateStat.isDirectory()) {
             this.handleDir(this.templatePath);
@@ -64,8 +73,7 @@ export class CreateComponentBackend implements ICreateComponentBackend {
             try {
                 dirFileStat = await fs.promises.stat(dirFileFullPath);
             } catch(e) {
-                Promise.reject(e);
-                if (!dirFileStat) return;
+                return console.error(e);
             }
 
             if (dirFileStat.isDirectory()) {
@@ -82,7 +90,7 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         try {
             fileStat = await fs.promises.stat(fileFullPath);
         } catch(e) {
-            return Promise.reject(e);
+            return console.error(e);
         }
 
         const copyBaseName = this.getCopyBaseName(fileFullPath);
@@ -94,7 +102,7 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         try {
             fileContent = await (await fs.promises.readFile(fileFullPath)).toString();
         } catch(e) {
-            return Promise.reject(e);
+            return console.error(e);
         }
 
         const processedContent = tLoader.loadReactPMTemplate(fileContent, this.args.name);
@@ -103,7 +111,7 @@ export class CreateComponentBackend implements ICreateComponentBackend {
             await this.mkDirIfNotExists(path.dirname(copyFullPath));
             await fs.promises.writeFile(copyFullPath, processedContent, { encoding: "utf-8" });
         } catch(e) {
-            return Promise.reject(e);
+            return console.error(e);
         }
     }
 
@@ -113,7 +121,7 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         }
 
         const baseName = path.basename(fileFullPath);
-        const templateLoader = new ReactPMTemplateLoader();
+        const templateLoader = new ReactCMTemplateLoader();
         return templateLoader.loadReactPMTemplate(baseName, this.args.name);
     }
 
@@ -130,9 +138,9 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         return path.join(this.cfg.components, this.args.name, relativePath);
     }
 
-    protected getFileTemplateLoader(fileFullPath: string): IReactPMTeplateLoader {
-        if (/\.(js||jsx||ts||tsx)$/.test(fileFullPath)) return new ReactPM_TSX_TemplateLoader();
-        return new ReactPMTemplateLoader();
+    protected getFileTemplateLoader(fileFullPath: string): IReactCMTeplateLoader {
+        if (/\.(js||jsx||ts||tsx)$/.test(fileFullPath)) return new ReactCM_TSX_TemplateLoader();
+        return new ReactCMTemplateLoader();
     }
 
     protected async mkDirIfNotExists(path: string) {

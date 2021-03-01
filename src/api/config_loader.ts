@@ -1,21 +1,21 @@
-import { IReactPMConfig, IReactPMconfigField } from "./cfg";
+import { IReactCMConfig, IReactCMconfigField } from "./cfg";
 import { validateChooseArg } from "./chooseArg";
 import { parseExternalJSON } from "./external_json_parser";
-import { IReactPMConfigFinder } from "./config_finder";
+import { IReactCMConfigFinder } from "./config_finder";
 import * as paths from "./paths";
 
-export interface IReactPMConfigLoader {
-    loadCfg(): Promise<IReactPMConfig>;
+export interface IReactCMConfigLoader {
+    loadCfg(): Promise<IReactCMConfig>;
 }
 
-export class ReactPMConfigLoader implements IReactPMConfigLoader {
-    protected configFinder: IReactPMConfigFinder;
+export class ReactCMConfigLoader implements IReactCMConfigLoader {
+    protected configFinder: IReactCMConfigFinder;
 
-    constructor(finder: IReactPMConfigFinder) {
+    constructor(finder: IReactCMConfigFinder) {
         this.configFinder = finder;
     }
 
-    protected fields: IReactPMconfigField<any>[] = [
+    protected fields: IReactCMconfigField<any>[] = [
         {
             name: "cTemplate",
             default: paths.cTemplatePath
@@ -30,7 +30,7 @@ export class ReactPMConfigLoader implements IReactPMConfigLoader {
         }
     ]
 
-    protected addDefaultFields(config: any): IReactPMConfig {
+    protected addDefaultFields(config: any): IReactCMConfig {
         for (let i = 0; i < this.fields.length; i++) {
             const field = this.fields[i];
     
@@ -55,7 +55,7 @@ export class ReactPMConfigLoader implements IReactPMConfigLoader {
         }
     }
 
-    public async loadCfg(): Promise<IReactPMConfig> {
+    public async loadCfg(): Promise<IReactCMConfig> {
         try {
             const cfgPath = await this.configFinder.findConfig();
 
@@ -74,9 +74,8 @@ export class ReactPMConfigLoader implements IReactPMConfigLoader {
                 console.error("config does'nt exist");
                 throw(e);
             }
-    
-            console.error(e);
-            throw e;
+
+            return Promise.reject(e);
         }
     }
 }
