@@ -1,10 +1,10 @@
 {
-  "name": "react-cm",
+  "name": "k-react-cm",
   "description": "manages your project components from cli",
   "version": "1.0.0",
   "author": "kostayne",
   "bin": {
-    "cli-pm": "./bin/run"
+    "k-react-cm": "./bin/run"
   },
   "bugs": "https://github.com/Kostayne/react-cm/issues",
   "dependencies": {
@@ -49,11 +49,11 @@
   "keywords": [
     "oclif"
   ],
-  "license": "ISC",
+  "license": "Apache 2.0",
   "main": "index.js",
   "oclif": {
     "commands": "./lib/commands",
-    "bin": "cli-pm",
+    "bin": "k-react-cm",
     "plugins": [
       "@oclif/plugin-help"
     ]

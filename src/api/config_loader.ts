@@ -18,11 +18,9 @@ export class ReactCMConfigLoader implements IReactCMConfigLoader {
     protected fields: IReactCMconfigField<any>[] = [
         {
             name: "cTemplate",
-            default: paths.cTemplatePath
         },
         {
             name: "fnTemplate",
-            default: paths.fnTemplatePath
         },
         {
             name: "components",

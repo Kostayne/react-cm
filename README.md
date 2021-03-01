@@ -1,4 +1,4 @@
-react-component-manager (react-cm)
+react-component-manager (k-react-cm)
 ===================
 
 Manages your react components from cli. Easy to configure and extend.
@@ -17,7 +17,7 @@ Manages your react components from cli. Easy to configure and extend.
 First of all install the package from npm.
 
 ```
-npm i react-cm
+npm i k-react-cm
 ```
 
 Then setup the config. You can do this in two ways. By creating seperated react-cm.json file in the project root or by creating reactCm field in "package.json". After that fill the config.
