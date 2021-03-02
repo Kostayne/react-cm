@@ -58,10 +58,10 @@ export class ReactCMConfigLoader implements IReactCMConfigLoader {
             const cfgPath = await this.configFinder.findConfig();
 
             if (cfgPath == paths.packagePath) {
-                const cfg = (await parseExternalJSON(cfgPath)).reactPM;
+                const cfg = (await parseExternalJSON(cfgPath)).reactCM;
             }
 
-            const cfg = cfgPath == paths.packagePath? (await parseExternalJSON(cfgPath)).reactPM : await parseExternalJSON(cfgPath);
+            const cfg = cfgPath == paths.packagePath? (await parseExternalJSON(cfgPath)).reactCM : await parseExternalJSON(cfgPath);
             this.addDefaultFields(cfg);
             this.verifyConfig(cfg);
             return cfg;

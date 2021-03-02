@@ -1,5 +1,5 @@
 {
-    "cTemplate": "C:\\Users\\fucko\\Desktop\\cli-project-manager\\example\\templates\\complex_template",
-    "fnTemplate": "C:\\Users\\fucko\\Desktop\\cli-project-manager\\example\\templates\\fnTemplate.tsx",
-    "components": "C:\\Users\\fucko\\Desktop\\cli-project-manager\\example\\components"
+    "cTemplate": "C:\\Users\\fucko\\Desktop\\projects\\cli-project-manager\\example\\templates\\cTemplate.tsx",
+    "fnTemplate": "C:\\Users\\fucko\\Desktop\\projects\\cli-project-manager\\example\\templates\\fnTemplate.tsx",
+    "components": "C:\\Users\\fucko\\Desktop\\projects\\cli-project-manager\\example\\components"
 }
