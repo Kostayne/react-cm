@@ -1,7 +1,7 @@
 {
   "name": "k-react-cm",
   "description": "manages your project components from cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "kostayne",
   "bin": {
     "k-react-cm": "./bin/run"
@@ -60,13 +60,10 @@
   },
   "repository": "Kostayne/react-cm",
   "scripts": {
-    "dev": "tsc",
-    "generate-template": "oclif multi",
     "postpack": "rimraf oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
-    "prepack": "rimraf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
-    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
-    "version": "oclif-dev readme && git add README.md"
+    "prepack": "rimraf lib && tsc -b && oclif-dev manifest",
+    "version": "oclif-dev readmed"
   },
   "types": "lib/index.d.ts"
 }

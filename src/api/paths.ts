@@ -1,4 +1,3 @@
-import { use } from "chai";
 import * as path from "path";
 
 export const userPath = path.join(process.argv[1], "../", "../");

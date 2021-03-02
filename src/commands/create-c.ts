@@ -1,5 +1,4 @@
 import {Command, flags} from '@oclif/command';
-import { validateChooseArg } from '../api/chooseArg';
 import { CreateBackendArgs, CreateComponentBackend } from '../commands_backend/create_backend';
 import { ReactCMConfigLoader } from '../api/config_loader';
 import { ReactCMConfigFinder } from '../api/config_finder';
@@ -12,13 +11,13 @@ export default class CreateComponent extends Command {
     force: flags.boolean({char: 'f'}),
   }
 
-  protected basedOnOptions = ["class", "fn"];
-
-  static args = [{name: 'name'}, {name: "basedOn"}];
+  static args = [
+    { name: 'name', required: true }, 
+    { name: "basedOn", required: true, options: ["class", "fn"] }
+  ];
 
   async run() {
-    const {args, flags} = this.parse(CreateComponent);
-    validateChooseArg(args.basedOn, this.basedOnOptions);
+    const { args, flags } = this.parse(CreateComponent);
 
     const finder = new ReactCMConfigFinder();
     const loader = new ReactCMConfigLoader(finder);
