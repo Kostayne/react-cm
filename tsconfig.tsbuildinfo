@@ -187,7 +187,7 @@
         "affectsGlobalScope": false
       },
       "./src/api/paths.ts": {
-        "version": "3e7b79af7d2f572a8a0a5819daf3b2929ea28c48ed10c2bce1b89224d71a998f",
+        "version": "2da2ad6ca034a329a4328590e8f920dd52446689af9154e2d4e3332ee124008f",
         "signature": "4acb94cd206c07fc8432d22633d05b5aac3676970ae57d51429affb735347c89",
         "affectsGlobalScope": false
       },
