@@ -47,7 +47,11 @@
   ],
   "homepage": "https://github.com/Kostayne/react-cm",
   "keywords": [
-    "oclif"
+    "oclif",
+    "react",
+    "cli",
+    "manager",
+    "components"
   ],
   "license": "Apache 2.0",
   "main": "index.js",
