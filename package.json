@@ -1,7 +1,7 @@
 {
   "name": "k-react-cm",
   "description": "manages your project components from cli",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "kostayne",
   "bin": {
     "k-react-cm": "./bin/run"
