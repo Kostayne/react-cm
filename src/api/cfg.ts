@@ -1,12 +1,9 @@
-export interface IReactCMconfigField<T> {
+export interface IReactCMTemplate {
     name: string;
-    default?: T;
-    isRequired?: boolean;
-    chooses?: string[];
+    path: string;
 }
 
 export interface IReactCMConfig {
-    cTemplate: string;
-    fnTemplate: string;
+    templates: IReactCMTemplate[];
     components: string;
 }

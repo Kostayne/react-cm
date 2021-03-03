@@ -1,5 +1,5 @@
-import { IReactCMConfig, IReactCMconfigField } from "./cfg";
-import { validateChooseArg } from "./chooseArg";
+import { IReactCMConfig } from "./cfg";
+import { IReactCMConfigValidator } from "./validator_cfg";
 import { parseExternalJSON } from "./external_json_parser";
 import { IReactCMConfigFinder } from "./config_finder";
 import * as paths from "./paths";
@@ -9,53 +9,24 @@ export interface IReactCMConfigLoader {
 }
 
 export class ReactCMConfigLoader implements IReactCMConfigLoader {
-    protected configFinder: IReactCMConfigFinder;
+    protected finder: IReactCMConfigFinder;
+    protected validator: IReactCMConfigValidator<IReactCMConfig>;
+    protected defaultFields = {
+        components: paths.componentsPath
+    };
 
-    constructor(finder: IReactCMConfigFinder) {
-        this.configFinder = finder;
+    constructor(finder: IReactCMConfigFinder, validator: IReactCMConfigValidator<IReactCMConfig>) {
+        this.finder = finder;
+        this.validator = validator;
     }
-
-    protected fields: IReactCMconfigField<any>[] = [
-        {
-            name: "cTemplate",
-        },
-        {
-            name: "fnTemplate",
-        },
-        {
-            name: "components",
-            default: paths.componentsPath,
-        }
-    ]
 
     protected addDefaultFields(config: any): IReactCMConfig {
-        for (let i = 0; i < this.fields.length; i++) {
-            const field = this.fields[i];
-    
-            if (config[field.name]) continue;
-            if (field.isRequired) config[field.name] = undefined;
-            if (field.default == null || field.default == undefined) continue;
-    
-            config[field.name] = field.default;
-        }
-    
-        return config;
-    }
-    
-    protected verifyConfig(config: any) {
-        for (let i = 0; i < this.fields.length; i++) {
-            const field = this.fields[i];
-    
-            if (field.chooses) validateChooseArg(config[field.name], field.chooses);
-    
-            if (!field.isRequired) continue;
-            if (!config[field.name]) throw `Config must contain ${field.name} field`;
-        }
+        return { ...this.defaultFields, ...config };
     }
 
     public async loadCfg(): Promise<IReactCMConfig> {
         try {
-            const cfgPath = await this.configFinder.findConfig();
+            const cfgPath = await this.finder.findConfig();
 
             if (cfgPath == paths.packagePath) {
                 const cfg = (await parseExternalJSON(cfgPath)).reactCM;
@@ -63,7 +34,7 @@ export class ReactCMConfigLoader implements IReactCMConfigLoader {
 
             const cfg = cfgPath == paths.packagePath? (await parseExternalJSON(cfgPath)).reactCM : await parseExternalJSON(cfgPath);
             this.addDefaultFields(cfg);
-            this.verifyConfig(cfg);
+            this.validator.verifyReactCMConfig(cfg);
             return cfg;
         }
     
