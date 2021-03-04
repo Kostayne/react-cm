@@ -1,7 +1,7 @@
 import { IReactCMConfigLoader } from "../api/config_loader";
 import { isFileExists } from "../api/is_file_exists";
 import { IReactCMTeplateLoader, ReactCMTemplateLoader, ReactCM_TSX_TemplateLoader } from "../api/template_loader";
-import { IReactCMConfig } from "../api/cfg";
+import { IReactCMConfig, IReactCMTemplate } from "../api/cfg";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -32,17 +32,21 @@ export class CreateComponentBackend implements ICreateComponentBackend {
             return console.error(e);
         }
 
-        this.templatePath = this.args.basedOn == "class"? this.cfg.cTemplate : this.cfg.fnTemplate;
+        const template = this.cfg.templates.find((t: IReactCMTemplate) => {
+            return t.name == this.args.basedOn;
+        });
+
+        if (!template) return console.error("there is no template with that name, check your config");
+        this.templatePath = template.path;
 
         let templateStat: fs.Stats | null = null;
-
         try {
             templateStat = await fs.promises.stat(this.templatePath);
         }
 
         catch(e) {
             if (e.code == "ENOENT") {
-                return console.error("Template not exists");
+                return console.error("Template file with provided path is not exists");
             }
 
             return console.error(e);

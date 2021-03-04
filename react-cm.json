@@ -1,5 +1,13 @@
 {
-    "cTemplate": "C:\\Users\\fucko\\Desktop\\projects\\cli-project-manager\\example\\templates\\cTemplate.tsx",
-    "fnTemplate": "C:\\Users\\fucko\\Desktop\\projects\\cli-project-manager\\example\\templates\\fnTemplate.tsx",
-    "components": "C:\\Users\\fucko\\Desktop\\projects\\cli-project-manager\\example\\components"
+    "templates": [
+        {
+            "name": "c",
+            "path": "C:\\Users\\fucko\\Desktop\\projects\\react-cm\\example\\templates\\cTemplate.tsx"
+        },
+        {
+            "name": "f",
+            "path": "C:\\Users\\fucko\\Desktop\\projects\\react-cm\\example\\templates\\fnTemplate.tsx"
+        }
+    ],
+    "components": "C:\\Users\\fucko\\Desktop\\projects\\react-cm\\example\\components"
 }
