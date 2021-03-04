@@ -1,6 +1,8 @@
 import {Command, flags} from '@oclif/command';
+import { IReactCMConfig } from '../api/cfg';
 import { ReactCMConfigFinder } from '../api/config_finder';
 import { ReactCMConfigLoader } from '../api/config_loader';
+import { ReactCMConfigValidator } from '../api/validator_cfg';
 import { RemoveBackend, RemoveBackendArgs } from "../commands_backend/remove_backend";
 
 export default class RemoveComponent extends Command {
@@ -15,7 +17,8 @@ export default class RemoveComponent extends Command {
 
     async run() {
         const {args, flags} = this.parse(RemoveComponent);
-        const backend = new RemoveBackend(new ReactCMConfigLoader(new ReactCMConfigFinder()), args as RemoveBackendArgs);
+        const validator = new ReactCMConfigValidator<IReactCMConfig>();
+        const backend = new RemoveBackend(new ReactCMConfigLoader(new ReactCMConfigFinder(), validator), args as RemoveBackendArgs);
         await backend.removeComponent();
     }
 }
