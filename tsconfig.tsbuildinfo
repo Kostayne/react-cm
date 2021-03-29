@@ -216,9 +216,59 @@
         "signature": "f86c04a744ebcede96bac376f9a2c90f2bd3c422740d91dda4ca6233199d4977",
         "affectsGlobalScope": false
       },
+      "./node_modules/camel-case/dist/index.d.ts": {
+        "version": "6ae1bddee5c790439bd992abd063b9b46e0cadd676c2a8562268d1869213ff60",
+        "signature": "6ae1bddee5c790439bd992abd063b9b46e0cadd676c2a8562268d1869213ff60",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/capital-case/dist/index.d.ts": {
+        "version": "606244fc97a6a74b877f2e924ba7e55b233bc6acb57d7bf40ba84a5be2d9adb0",
+        "signature": "606244fc97a6a74b877f2e924ba7e55b233bc6acb57d7bf40ba84a5be2d9adb0",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/constant-case/dist/index.d.ts": {
+        "version": "4a1cabac71036b8a14f5db1b753b579f0c901c7d7b9227e6872dadf6efb104e8",
+        "signature": "4a1cabac71036b8a14f5db1b753b579f0c901c7d7b9227e6872dadf6efb104e8",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/dot-case/dist/index.d.ts": {
+        "version": "062959a1d825b96639d87be35fe497cbd3f89544bf06fdad577bbfb85fcf604c",
+        "signature": "062959a1d825b96639d87be35fe497cbd3f89544bf06fdad577bbfb85fcf604c",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/header-case/dist/index.d.ts": {
+        "version": "4c3672dc8f4e4fdd3d18525b22b31f1b5481f5a415db96550d3ac5163a6c3dd3",
+        "signature": "4c3672dc8f4e4fdd3d18525b22b31f1b5481f5a415db96550d3ac5163a6c3dd3",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/param-case/dist/index.d.ts": {
+        "version": "f9a69ca445010b91fe08f08c06e0f86d79c0d776905f9bdb828477cb2a1eb7fc",
+        "signature": "f9a69ca445010b91fe08f08c06e0f86d79c0d776905f9bdb828477cb2a1eb7fc",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/path-case/dist/index.d.ts": {
+        "version": "ad7fd0e7ee457d4884b3aaecbcbd2a80b6803407c4ce2540c296170d4c7918ef",
+        "signature": "ad7fd0e7ee457d4884b3aaecbcbd2a80b6803407c4ce2540c296170d4c7918ef",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/sentence-case/dist/index.d.ts": {
+        "version": "a50ef21605f41c6acad6c3ef0307e5311b94963c846ca093c764b80cdb5318d6",
+        "signature": "a50ef21605f41c6acad6c3ef0307e5311b94963c846ca093c764b80cdb5318d6",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/snake-case/dist/index.d.ts": {
+        "version": "74b4035dd26d09a417c44ca23ab5ee69b173f8c2f6b2e47350ab0795cf2d4a17",
+        "signature": "74b4035dd26d09a417c44ca23ab5ee69b173f8c2f6b2e47350ab0795cf2d4a17",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/change-case/dist/index.d.ts": {
+        "version": "918f86ee2b19cc38cb8b1a4cf8f223eb228aaa39df3604c42f700fac2f0b3ea1",
+        "signature": "918f86ee2b19cc38cb8b1a4cf8f223eb228aaa39df3604c42f700fac2f0b3ea1",
+        "affectsGlobalScope": false
+      },
       "./src/api/template_loader.ts": {
-        "version": "d7c48600c1f7ba2120bb571dc388bb8a61195d89c613a1d425ead9a2a4701f07",
-        "signature": "a87b2cc40c7a109510bda1929a43725926f72f0f5cb955954eed1ded5757cfee",
+        "version": "94f6891bb4a7a1c8f9a44d9775d91e8108545cc4824edb0a5cc49154bfb28519",
+        "signature": "1733e2e90caaf4712a40d815d34b1f7c05e7ff02f7676c50e2a6e0167405d86f",
         "affectsGlobalScope": false
       },
       "./node_modules/@oclif/parser/lib/args.d.ts": {
@@ -352,8 +402,8 @@
         "affectsGlobalScope": false
       },
       "./src/commands_backend/create_backend.ts": {
-        "version": "6bb2085229386e2489061c6eca3f3a0e8a8fbe3088c50d18184e6fee2ae0ec60",
-        "signature": "fac55ba4792d030ed2c197e325d4b579f714dc51088e5bfd47ac7eeb95cd4165",
+        "version": "6ef10bf076154a9c4964cc4fc61ae1e095e5119c0e7b707c18a240d3f1c1231e",
+        "signature": "5568985fbab0c6e244acbe954fbcc97140ad2eda8050d624c98d68ba74725607",
         "affectsGlobalScope": false
       },
       "./src/commands/create-c.ts": {
@@ -1354,6 +1404,31 @@
       "./node_modules/@types/sinon/index.d.ts": [
         "./node_modules/@types/sinonjs__fake-timers/index.d.ts"
       ],
+      "./node_modules/camel-case/dist/index.d.ts": [
+        "./node_modules/pascal-case/dist/index.d.ts"
+      ],
+      "./node_modules/capital-case/dist/index.d.ts": [
+        "./node_modules/no-case/dist/index.d.ts"
+      ],
+      "./node_modules/change-case/dist/index.d.ts": [
+        "./node_modules/camel-case/dist/index.d.ts",
+        "./node_modules/capital-case/dist/index.d.ts",
+        "./node_modules/constant-case/dist/index.d.ts",
+        "./node_modules/dot-case/dist/index.d.ts",
+        "./node_modules/header-case/dist/index.d.ts",
+        "./node_modules/no-case/dist/index.d.ts",
+        "./node_modules/param-case/dist/index.d.ts",
+        "./node_modules/pascal-case/dist/index.d.ts",
+        "./node_modules/path-case/dist/index.d.ts",
+        "./node_modules/sentence-case/dist/index.d.ts",
+        "./node_modules/snake-case/dist/index.d.ts"
+      ],
+      "./node_modules/constant-case/dist/index.d.ts": [
+        "./node_modules/no-case/dist/index.d.ts"
+      ],
+      "./node_modules/dot-case/dist/index.d.ts": [
+        "./node_modules/no-case/dist/index.d.ts"
+      ],
       "./node_modules/fast-glob/out/index.d.ts": [
         "./node_modules/@types/node/index.d.ts",
         "./node_modules/fast-glob/out/managers/tasks.d.ts",
@@ -1375,8 +1450,23 @@
         "./node_modules/@types/glob/index.d.ts",
         "./node_modules/fast-glob/out/index.d.ts"
       ],
+      "./node_modules/header-case/dist/index.d.ts": [
+        "./node_modules/capital-case/dist/index.d.ts"
+      ],
+      "./node_modules/param-case/dist/index.d.ts": [
+        "./node_modules/dot-case/dist/index.d.ts"
+      ],
       "./node_modules/pascal-case/dist/index.d.ts": [
         "./node_modules/no-case/dist/index.d.ts"
+      ],
+      "./node_modules/path-case/dist/index.d.ts": [
+        "./node_modules/dot-case/dist/index.d.ts"
+      ],
+      "./node_modules/sentence-case/dist/index.d.ts": [
+        "./node_modules/no-case/dist/index.d.ts"
+      ],
+      "./node_modules/snake-case/dist/index.d.ts": [
+        "./node_modules/dot-case/dist/index.d.ts"
       ],
       "./src/api/cfg.ts": [
         "./node_modules/tslib/tslib.d.ts"
@@ -1411,7 +1501,7 @@
         "./node_modules/tslib/tslib.d.ts"
       ],
       "./src/api/template_loader.ts": [
-        "./node_modules/pascal-case/dist/index.d.ts",
+        "./node_modules/change-case/dist/index.d.ts",
         "./node_modules/tslib/tslib.d.ts"
       ],
       "./src/api/validator_cfg.ts": [
@@ -1967,6 +2057,31 @@
       "./node_modules/@types/sinon/index.d.ts": [
         "./node_modules/@types/sinonjs__fake-timers/index.d.ts"
       ],
+      "./node_modules/camel-case/dist/index.d.ts": [
+        "./node_modules/pascal-case/dist/index.d.ts"
+      ],
+      "./node_modules/capital-case/dist/index.d.ts": [
+        "./node_modules/no-case/dist/index.d.ts"
+      ],
+      "./node_modules/change-case/dist/index.d.ts": [
+        "./node_modules/camel-case/dist/index.d.ts",
+        "./node_modules/capital-case/dist/index.d.ts",
+        "./node_modules/constant-case/dist/index.d.ts",
+        "./node_modules/dot-case/dist/index.d.ts",
+        "./node_modules/header-case/dist/index.d.ts",
+        "./node_modules/no-case/dist/index.d.ts",
+        "./node_modules/param-case/dist/index.d.ts",
+        "./node_modules/pascal-case/dist/index.d.ts",
+        "./node_modules/path-case/dist/index.d.ts",
+        "./node_modules/sentence-case/dist/index.d.ts",
+        "./node_modules/snake-case/dist/index.d.ts"
+      ],
+      "./node_modules/constant-case/dist/index.d.ts": [
+        "./node_modules/no-case/dist/index.d.ts"
+      ],
+      "./node_modules/dot-case/dist/index.d.ts": [
+        "./node_modules/no-case/dist/index.d.ts"
+      ],
       "./node_modules/fast-glob/out/index.d.ts": [
         "./node_modules/@types/node/index.d.ts",
         "./node_modules/fast-glob/out/managers/tasks.d.ts",
@@ -1988,8 +2103,23 @@
         "./node_modules/@types/glob/index.d.ts",
         "./node_modules/fast-glob/out/index.d.ts"
       ],
+      "./node_modules/header-case/dist/index.d.ts": [
+        "./node_modules/capital-case/dist/index.d.ts"
+      ],
+      "./node_modules/param-case/dist/index.d.ts": [
+        "./node_modules/dot-case/dist/index.d.ts"
+      ],
       "./node_modules/pascal-case/dist/index.d.ts": [
         "./node_modules/no-case/dist/index.d.ts"
+      ],
+      "./node_modules/path-case/dist/index.d.ts": [
+        "./node_modules/dot-case/dist/index.d.ts"
+      ],
+      "./node_modules/sentence-case/dist/index.d.ts": [
+        "./node_modules/no-case/dist/index.d.ts"
+      ],
+      "./node_modules/snake-case/dist/index.d.ts": [
+        "./node_modules/dot-case/dist/index.d.ts"
       ],
       "./src/api/config_loader.ts": [
         "./src/api/cfg.ts",
@@ -2010,8 +2140,7 @@
       "./src/commands_backend/create_backend.ts": [
         "./node_modules/@types/node/fs.d.ts",
         "./src/api/cfg.ts",
-        "./src/api/config_loader.ts",
-        "./src/api/template_loader.ts"
+        "./src/api/config_loader.ts"
       ],
       "./src/commands_backend/remove_backend.ts": [
         "./src/api/cfg.ts",
@@ -2163,14 +2292,24 @@
       "./node_modules/@types/rimraf/index.d.ts",
       "./node_modules/@types/sinon/index.d.ts",
       "./node_modules/@types/sinonjs__fake-timers/index.d.ts",
+      "./node_modules/camel-case/dist/index.d.ts",
+      "./node_modules/capital-case/dist/index.d.ts",
+      "./node_modules/change-case/dist/index.d.ts",
+      "./node_modules/constant-case/dist/index.d.ts",
       "./node_modules/csstype/index.d.ts",
+      "./node_modules/dot-case/dist/index.d.ts",
       "./node_modules/fast-glob/out/index.d.ts",
       "./node_modules/fast-glob/out/managers/tasks.d.ts",
       "./node_modules/fast-glob/out/settings.d.ts",
       "./node_modules/fast-glob/out/types/index.d.ts",
       "./node_modules/globby/index.d.ts",
+      "./node_modules/header-case/dist/index.d.ts",
       "./node_modules/no-case/dist/index.d.ts",
+      "./node_modules/param-case/dist/index.d.ts",
       "./node_modules/pascal-case/dist/index.d.ts",
+      "./node_modules/path-case/dist/index.d.ts",
+      "./node_modules/sentence-case/dist/index.d.ts",
+      "./node_modules/snake-case/dist/index.d.ts",
       "./node_modules/tslib/tslib.d.ts",
       "./src/api/cfg.ts",
       "./src/api/choosearg.ts",
@@ -2187,5 +2326,5 @@
       "./src/commands_backend/remove_backend.ts"
     ]
   },
-  "version": "4.2.2"
+  "version": "4.2.3"
 }

@@ -46,13 +46,13 @@ Then setup the config. You can do this in two ways. By creating seperated react-
 # Usage
 If you want to create complex component (more than single file) then create a directory. Move component files into it. And specify template path (fn or class) to that dir full path. Done!
 
-Want to use name from argument? Insert %CNAME% into the template an it will be replaced with a component name. If file ext is jsx || tsx || js then will be used pascal case. Else value from cli (your input). Later i'll add kebab case for css && sass files.
+Want to use name from argument? Insert \_\_oname__ into the template. It will be replaced with original name. Insert \_\_cname__ to replace it with jsx component name (PascalCase). To create css selector use \_\_pname__ (it will be kebab cased).
 
 ``` tsx
 // template example
 import React from "react";
 
-export const %CNAME% = () => {
+export const __cname__ = () => {
     return (
         <div>
             <p>Text</p>
