@@ -1,5 +1,5 @@
 ## Changelog
-## 02.09.2021 V (3.1.7)
+## 02.09.2021 V (3.1.8)
 
 ### Commands
 - removed command "remove-c" 
