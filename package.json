@@ -1,7 +1,7 @@
 {
   "name": "k-react-cm",
   "description": "manages your project components from cli",
-  "version": "3.1.8",
+  "version": "3.1.9",
   "author": "kostayne",
   "bin": {
     "k-react-cm": "./bin/run"
@@ -68,7 +68,7 @@
   "scripts": {
     "postpack": "rimraf oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
-    "prepack": "rimraf lib && tsc -b && oclif-dev manifest",
+    "prepack": "tsc -b && oclif-dev manifest",
     "version": "oclif-dev readmed"
   },
   "types": "lib/index.d.ts"
