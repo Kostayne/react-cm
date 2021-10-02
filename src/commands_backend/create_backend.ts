@@ -1,13 +1,13 @@
-import { IReactCMConfigLoader } from "../api/config_loader";
-import { isFileExists } from "../api/is_file_exists";
-import { IReactCMTeplateLoader, ReactCMTemplateLoader, ReactCM_TSX_TemplateLoader, ReactCM_UniversalTemplateLoader } from "../api/template_loader";
-import { IReactCMConfig, IReactCMTemplate } from "../api/cfg";
+import { isFileExists } from "../utils/is_file_exists";
+import { ReactCM_UniversalTemplateLoader } from "../template_loader";
+import { IReactCMConfig, IReactCMTemplate } from "../cfg";
+import { CmdFlag } from '../types';
 import * as path from "path";
 import * as fs from "fs";
 
-export interface CreateBackendArgs {
+export interface CreateBackendArgs { 
     name: string;
-    basedOn: string;
+    template: string;
 }
 
 export interface ICreateComponentBackend {
@@ -15,38 +15,40 @@ export interface ICreateComponentBackend {
 }
 
 export class CreateComponentBackend implements ICreateComponentBackend {
-    protected cfgLoader: IReactCMConfigLoader;
     protected args: CreateBackendArgs;
-    protected templatePath: string = "";
+    protected templatePath: string = '';
+    protected outDir: string = '';
     protected cfg: IReactCMConfig | null = null;
+    protected flags: CmdFlag;
 
-    constructor(cfgLoader: IReactCMConfigLoader, args: CreateBackendArgs) {
-        this.cfgLoader = cfgLoader;
+    constructor(cfg: IReactCMConfig, args: CreateBackendArgs, flags: { [name: string]: string | number }) {
+        this.flags = flags;
         this.args = args;
+        this.cfg = cfg;
     }
 
     async createComponent() {
-        try {
-            this.cfg = await this.cfgLoader.loadCfg();
-        } catch(e) {
-            return console.error(e);
+        if (!this.cfg) {
+            return console.trace('config is null or undefined!');
         }
 
         const template = this.cfg.templates.find((t: IReactCMTemplate) => {
-            return t.name == this.args.basedOn;
+            return t.name == this.args.template;
         });
 
-        if (!template) return console.error("there is no template with that name, check your config");
+        if (!template) return console.error('there is no template with that name, check your config');
         this.templatePath = template.path;
+        this.outDir = this.flags.out? this.flags.out as string : template.outDir;
 
         let templateStat: fs.Stats | null = null;
+
         try {
             templateStat = await fs.promises.stat(this.templatePath);
         }
 
-        catch(e) {
-            if (e.code == "ENOENT") {
-                return console.error("Template file with provided path is not exists");
+        catch(e: any) {
+            if (e.code == 'ENOENT') {
+                return console.error('Template file with provided path is not exists');
             }
 
             return console.error(e);
@@ -55,8 +57,10 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         if (!templateStat) return;
 
         try {
-            if (await this.isComponentExists(templateStat)) return console.log("Already exists");
-        } catch(e) {
+            if (await this.isComponentExists(templateStat)) {
+                return console.log('Already exists');
+            }
+        } catch(e: unknown) {
             return console.error(e);
         }
 
@@ -89,10 +93,8 @@ export class CreateComponentBackend implements ICreateComponentBackend {
     }
 
     protected async handleFile(fileFullPath: string) {
-        let fileStat: fs.Stats | null = null;
-
         try {
-            fileStat = await fs.promises.stat(fileFullPath);
+            await fs.promises.stat(fileFullPath);
         } catch(e) {
             return console.error(e);
         }
@@ -101,7 +103,7 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         const copyFullPath = this.getFilePath(fileFullPath, copyBaseName);
         const tLoader = new ReactCM_UniversalTemplateLoader();
         
-        let fileContent: string = "";
+        let fileContent: string = '';
 
         try {
             fileContent = await (await fs.promises.readFile(fileFullPath)).toString();
@@ -113,7 +115,7 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         
         try {
             await this.mkDirIfNotExists(path.dirname(copyFullPath));
-            await fs.promises.writeFile(copyFullPath, processedContent, { encoding: "utf-8" });
+            await fs.promises.writeFile(copyFullPath, processedContent, { encoding: 'utf-8' });
         } catch(e) {
             return console.error(e);
         }
@@ -130,36 +132,36 @@ export class CreateComponentBackend implements ICreateComponentBackend {
     }
 
     protected getFilePath(fileFullPath: string, baseName: string): string {
-        if (!this.cfg) throw new Error("cfg is not set");
+        if (!this.cfg) throw new Error('cfg is not set');
 
         if (fileFullPath == this.templatePath) {
-            return path.join(this.cfg.components, baseName);
+            return path.join(this.outDir, baseName);
         }
 
         const parentDir = path.dirname(fileFullPath);
         const renamedFileFullPath = path.join(parentDir, baseName); 
         const relativePath = path.relative(this.templatePath, renamedFileFullPath);
-        return path.join(this.cfg.components, this.args.name, relativePath);
+        return path.join(this.outDir, this.args.name, relativePath);
     }
 
     protected async mkDirIfNotExists(path: string) {
         try {
             await fs.promises.access(path);
-        } catch(e) {
-            if (e.code == "ENOENT") {
+        } catch(e: any) {
+            if (e.code == 'ENOENT') {
                 return await fs.promises.mkdir(path, { recursive: true });
             }
         }
     }
 
     protected async isComponentExists(templateStat: fs.Stats): Promise<boolean> {
-        if (!this.cfg) return Promise.reject(new Error("Cfg is not set"));
+        if (!this.cfg) return Promise.reject(new Error('Cfg is not set'));
 
         if (templateStat.isDirectory()) {
-            return await isFileExists(path.join(this.cfg.components, this.args.name));
+            return await isFileExists(path.join(this.outDir, this.args.name));
         } else {
             const ext = path.extname(this.templatePath);
-            return await isFileExists(path.join(this.cfg.components, this.args.name + ext));
+            return await isFileExists(path.join(this.outDir, this.args.name + ext));
         }
     }
 }

@@ -1,13 +1,14 @@
 {
     "templates": [
         {
-            "name": "c",
-            "path": "C:\\Users\\fucko\\Desktop\\projects\\react-cm\\example\\templates\\cTemplate.tsx"
+            "name": "cl",
+            "path": "./example/templates/cl.tsx",
+            "outDir": "./example/out/"
         },
         {
-            "name": "f",
-            "path": "C:\\Users\\fucko\\Desktop\\projects\\react-cm\\example\\templates\\fnTemplate.tsx"
+            "name": "fn",
+            "path": "./example/templates/fn.tsx",
+            "outDir": "./example/out/"
         }
-    ],
-    "components": "C:\\Users\\fucko\\Desktop\\projects\\react-cm\\example\\components"
+    ]
 }

@@ -1,7 +1,7 @@
 {
   "name": "k-react-cm",
   "description": "manages your project components from cli",
-  "version": "2.1.7",
+  "version": "3.1.7",
   "author": "kostayne",
   "bin": {
     "k-react-cm": "./bin/run"
@@ -13,6 +13,7 @@
     "@oclif/plugin-help": "^3.2.2",
     "@types/cli": "^0.11.19",
     "@types/rimraf": "^3.0.0",
+    "ajv": "^8.6.3",
     "change-case": "^4.1.2",
     "oclif": "^1.16.1",
     "pascal-case": "^3.1.2",

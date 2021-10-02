@@ -1,5 +1,5 @@
-import {  isFileExists } from "./is_file_exists";
-import { parseExternalJSON } from "./external_json_parser";
+import {  isFileExists } from "./utils/is_file_exists";
+import { parseExternalJSON } from "./utils/external_json_parser";
 import * as paths from "./paths";
 
 export interface IReactCMConfigFinder {
