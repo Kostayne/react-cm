@@ -1,20 +1,16 @@
 ## Changelog
-## 02.09.2021 V (3.1.8)
+## 04.09.2021 V (3.2.9)
 
 ### Commands
-- removed command "remove-c" 
-- changed command "create-c" to "create"
-- changed command "create-c" args to "kreact-cm create \<path> \<name>"
-- added command "create-c" optional parametr "-o || --out", that overrides template outDir
+- added optional flag -s (--subdir) to override config template value
 
 ### Config
-- removed components path field in config,
-- added outDir path in template
+- added optional subdir template property
 
 ### Code
-- removed config loader & validator from command backend constructor
-- improved cfg validation with ajv package
-- improved project structure
+- refactored create_backend
+- moved mkDirIfNotExists to utils
+- added getCreateSubdir method in create_backend
 
 JSON changed to
 
@@ -30,7 +26,8 @@ JSON changed to
         {
             "name": "page_fn",
             "templatePath": "./examples/page_fn.tsx",
-            "outDir": "./src/pages/"
+            "outDir": "./src/pages/",
+            "subdir": false
         }
     ]
 }

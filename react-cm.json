@@ -3,12 +3,21 @@
         {
             "name": "cl",
             "path": "./example/templates/cl.tsx",
-            "outDir": "./example/out/"
+            "outDir": "./example/out/",
+            "subDir": true
         },
+
         {
             "name": "fn",
             "path": "./example/templates/fn.tsx",
             "outDir": "./example/out/"
+        },
+
+        {
+            "name": "page",
+            "path": "./example/templates/page",
+            "outDir": "./example/out/",
+            "subDir": false
         }
     ]
 }

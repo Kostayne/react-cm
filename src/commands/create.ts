@@ -16,6 +16,12 @@ export default class CreateComponent extends Command {
       description: 'path to create component',
       multiple: false,
       required: false
+    }),
+
+    subdir: flags.boolean({
+      char: 's',
+      description: 'create subdir?',
+      required: false
     })
   }
 

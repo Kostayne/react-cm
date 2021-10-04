@@ -1,8 +1,4 @@
-export interface IReactCMTemplate {
-    name: string;
-    path: string;
-    outDir: string;
-}
+import { IReactCMTemplate } from "./template";
 
 export interface IReactCMConfig {
     templates: IReactCMTemplate[];

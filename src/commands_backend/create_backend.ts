@@ -1,6 +1,8 @@
 import { isFileExists } from "../utils/is_file_exists";
 import { ReactCM_UniversalTemplateLoader } from "../template_loader";
-import { IReactCMConfig, IReactCMTemplate } from "../cfg";
+import { IReactCMConfig } from "../cfg";
+import { IReactCMTemplate } from "../template";
+import { mkDirIfNotExists } from "../utils/mk_dir";
 import { CmdFlag } from '../types';
 import * as path from "path";
 import * as fs from "fs";
@@ -8,6 +10,11 @@ import * as fs from "fs";
 export interface CreateBackendArgs { 
     name: string;
     template: string;
+}
+
+export interface CreateBackendFlags {
+    subdir?: boolean,
+    out?: string
 }
 
 export interface ICreateComponentBackend {
@@ -19,9 +26,11 @@ export class CreateComponentBackend implements ICreateComponentBackend {
     protected templatePath: string = '';
     protected outDir: string = '';
     protected cfg: IReactCMConfig | null = null;
-    protected flags: CmdFlag;
+    protected flags: CreateBackendFlags;
+    protected subdir: boolean = false;
+    protected template: IReactCMTemplate | null = null;
 
-    constructor(cfg: IReactCMConfig, args: CreateBackendArgs, flags: { [name: string]: string | number }) {
+    constructor(cfg: IReactCMConfig, args: CreateBackendArgs, flags: CreateBackendFlags) {
         this.flags = flags;
         this.args = args;
         this.cfg = cfg;
@@ -37,8 +46,10 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         });
 
         if (!template) return console.error('there is no template with that name, check your config');
+        this.template = template;
+
         this.templatePath = template.path;
-        this.outDir = this.flags.out? this.flags.out as string : template.outDir;
+        this.outDir = this.flags.out != undefined? this.flags.out as string : template.outDir;
 
         let templateStat: fs.Stats | null = null;
 
@@ -99,14 +110,15 @@ export class CreateComponentBackend implements ICreateComponentBackend {
             return console.error(e);
         }
 
-        const copyBaseName = this.getCopyBaseName(fileFullPath);
+        const copyBaseName = this.getProcessedCopyBaseName(fileFullPath);
         const copyFullPath = this.getFilePath(fileFullPath, copyBaseName);
         const tLoader = new ReactCM_UniversalTemplateLoader();
         
         let fileContent: string = '';
 
         try {
-            fileContent = await (await fs.promises.readFile(fileFullPath)).toString();
+            const buffer = await fs.promises.readFile(fileFullPath);
+            fileContent = await buffer.toString();
         } catch(e) {
             return console.error(e);
         }
@@ -114,14 +126,14 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         const processedContent = tLoader.loadReactPMTemplate(fileContent, this.args.name);
         
         try {
-            await this.mkDirIfNotExists(path.dirname(copyFullPath));
+            await mkDirIfNotExists(path.dirname(copyFullPath));
             await fs.promises.writeFile(copyFullPath, processedContent, { encoding: 'utf-8' });
         } catch(e) {
             return console.error(e);
         }
     }
 
-    protected getCopyBaseName(fileFullPath: string): string {
+    protected getProcessedCopyBaseName(fileFullPath: string): string {
         if (fileFullPath == this.templatePath) {
             return this.args.name + path.extname(fileFullPath);
         }
@@ -131,27 +143,52 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         return templateLoader.loadReactPMTemplate(baseName, this.args.name);
     }
 
+    // TODO: implement subdir checks
     protected getFilePath(fileFullPath: string, baseName: string): string {
         if (!this.cfg) throw new Error('cfg is not set');
+        if (!this.template) throw new Error('template is not set');
 
+        // single file component case
         if (fileFullPath == this.templatePath) {
+            const createSubdir = this.getCreateSubdir(false);
+
+            if (createSubdir) {
+                return path.join(this.outDir, this.args.name, baseName);
+            }
+
             return path.join(this.outDir, baseName);
         }
+
+        // complex component case
+        const createSubdir = this.getCreateSubdir(true);
 
         const parentDir = path.dirname(fileFullPath);
         const renamedFileFullPath = path.join(parentDir, baseName); 
         const relativePath = path.relative(this.templatePath, renamedFileFullPath);
-        return path.join(this.outDir, this.args.name, relativePath);
+
+        if (createSubdir) {
+            return path.join(this.outDir, this.args.name, relativePath);
+        }
+
+        return path.join(this.outDir, relativePath);
     }
 
-    protected async mkDirIfNotExists(path: string) {
-        try {
-            await fs.promises.access(path);
-        } catch(e: any) {
-            if (e.code == 'ENOENT') {
-                return await fs.promises.mkdir(path, { recursive: true });
-            }
+    protected getCreateSubdir(defaultTemplateValue: boolean): boolean {
+        if (!this.template) {
+            throw new Error('template is not set');
         }
+
+        let createSubdir = this.template.subDir;
+
+        if (createSubdir == undefined) {
+            createSubdir = defaultTemplateValue;
+        }
+
+        if (this.flags.subdir != undefined) {
+            createSubdir = this.flags.subdir;
+        }
+
+        return createSubdir as boolean;
     }
 
     protected async isComponentExists(templateStat: fs.Stats): Promise<boolean> {

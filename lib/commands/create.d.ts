@@ -4,6 +4,7 @@ export default class CreateComponent extends Command {
     static flags: {
         help: import("@oclif/parser/lib/flags").IBooleanFlag<void>;
         out: flags.IOptionFlag<string | undefined>;
+        subdir: import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
     };
     static args: {
         name: string;
