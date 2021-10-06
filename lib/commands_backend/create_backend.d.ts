@@ -26,7 +26,7 @@ export declare class CreateComponentBackend implements ICreateComponentBackend {
     protected handleDir(dirFullPath: string): Promise<void>;
     protected handleFile(fileFullPath: string): Promise<void>;
     protected getProcessedCopyBaseName(fileFullPath: string): string;
-    protected getFilePath(fileFullPath: string, baseName: string): string;
-    protected getCreateSubdir(defaultTemplateValue: boolean): boolean;
+    protected getNewFileRelativePath(fileFullPath: string, baseName: string): string;
+    protected getCreateSubdirProp(defaultTemplateValue: boolean): boolean;
     protected isComponentExists(templateStat: fs.Stats): Promise<boolean>;
 }

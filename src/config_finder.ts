@@ -1,4 +1,4 @@
-import {  isFileExists } from "./utils/is_file_exists";
+import { isFileExists } from "./utils/is_file_exists";
 import { parseExternalJSON } from "./utils/external_json_parser";
 import * as paths from "./paths";
 

@@ -4,17 +4,17 @@ export interface IReactCMTeplateLoader {
     loadReactPMTemplate(content: string, name: string): string;
 }
 
-export class ReactCMTemplateLoader implements IReactCMTeplateLoader {
+export class ReactCMTemplateNameLoader implements IReactCMTeplateLoader {
     loadReactPMTemplate(content: string, cName: string): string {
         const withName = content.replace(new RegExp("%CNAME%", "g"), cName);
         return withName;
     }
 }
 
-export class ReactCM_TSX_TemplateLoader implements IReactCMTeplateLoader {
+export class ReactCMTemplateJSX_Loader implements IReactCMTeplateLoader {
     loadReactPMTemplate(content: string, name: string): string {
         const pascalCasedName = pascalCase(name);
-        const baseLoader = new ReactCMTemplateLoader();
+        const baseLoader = new ReactCMTemplateNameLoader();
         return baseLoader.loadReactPMTemplate(content, pascalCasedName);
     }
 }
@@ -40,8 +40,8 @@ export class ReactCM_UniversalTemplateLoader implements IReactCMTeplateLoader {
 
     loadReactPMTemplate(content: string, name: string): string {
         const rawNameReplaced = this.loadOriginal(content, name);
-        const tsxNameReplaced = this.loadTSX(rawNameReplaced, name);
-        const paramNameRepaced = this.loadParamCase(tsxNameReplaced, name);
+        const jsxNameReplaced = this.loadTSX(rawNameReplaced, name);
+        const paramNameRepaced = this.loadParamCase(jsxNameReplaced, name);
         return paramNameRepaced;
     }
 }

@@ -1,10 +1,10 @@
 export interface IReactCMTeplateLoader {
     loadReactPMTemplate(content: string, name: string): string;
 }
-export declare class ReactCMTemplateLoader implements IReactCMTeplateLoader {
+export declare class ReactCMTemplateNameLoader implements IReactCMTeplateLoader {
     loadReactPMTemplate(content: string, cName: string): string;
 }
-export declare class ReactCM_TSX_TemplateLoader implements IReactCMTeplateLoader {
+export declare class ReactCMTemplateJSX_Loader implements IReactCMTeplateLoader {
     loadReactPMTemplate(content: string, name: string): string;
 }
 export declare class ReactCM_UniversalTemplateLoader implements IReactCMTeplateLoader {
