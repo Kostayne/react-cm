@@ -28,34 +28,39 @@ Then setup the config. You can do this in two ways. By creating seperated react-
 // cl - complex template
 
 {
+    "defaults": {
+        "outDir": "./example/components"
+    }
+
     "templates": [
         {
             "name": "fn",
             "path": "./example/templates/fn.tsx",
+
+            // you can override default outDir
+            // if outDir not set in defaults block
+            // & not set in template error will occure
             "outDir": "./example/components",
         },
 
         {
             "name": "cl",
             "path": "./example/templates/cl",
-            "outDir": "./example/components",
         },
 
         {
             "name": "page",
             "path": "./example/templates/page",
-            "outDir": "./example/components",
-            "subDir": false // it's optional prop
 
-            // ------------------------------------------
             // when subDir is false
-            // pages => home.tsx, home.scss
+            // pages/home.tsx, pages/home.scss
 
             // when subDir is true
-            // pages => home => home.tsx, home.scss
-
+            // pages/home/home.tsx, pages/home/home.scss
+            
             // in complex components it's true by default
-            // ------------------------------------------
+            // but you can override it
+            "subDir": false
         }
     ]
 }
