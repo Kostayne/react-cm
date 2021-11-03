@@ -1,9 +1,12 @@
 {
+    "defaults": {
+        "outDir": "./example/out/"
+    },
+
     "templates": [
         {
             "name": "cl",
             "path": "./example/templates/cl.tsx",
-            "outDir": "./example/out/",
             "subDir": true
         },
 

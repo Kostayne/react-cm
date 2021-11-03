@@ -32,19 +32,19 @@ Then setup the config. You can do this in two ways. By creating seperated react-
         {
             "name": "fn",
             "path": "./example/templates/fn.tsx",
-            "outDir": "path": "./example/components",
+            "outDir": "./example/components",
         },
 
         {
             "name": "cl",
             "path": "./example/templates/cl",
-            "outDir": "path": "./example/components",
+            "outDir": "./example/components",
         },
 
         {
             "name": "page",
             "path": "./example/templates/page",
-            "outDir": "path": "./example/components",
+            "outDir": "./example/components",
             "subDir": false // it's optional prop
 
             // ------------------------------------------

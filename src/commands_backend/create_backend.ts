@@ -45,10 +45,13 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         });
 
         if (!template) return console.error('there is no template with that name, check your config');
-        this.template = template;
 
+        this.template = template;
         this.templatePath = template.path;
-        this.outDir = this.flags.out != undefined? this.flags.out as string : template.outDir;
+        
+        // cfg already validated, so outDir can't be undefined & we cast it to str
+        const cfgOutDir = (this.template.outDir || this.cfg.defaults?.outDir) as string;
+        this.outDir = this.flags.out != undefined? this.flags.out as string : cfgOutDir;
 
         let templateStat: fs.Stats | null = null;
 

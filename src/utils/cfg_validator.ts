@@ -24,7 +24,7 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
                 subDir: { type: 'boolean' }
             },
 
-            required: ['name', 'path', 'outDir'],
+            required: ['name', 'path'],
             additionalProperties: false
         }
 
@@ -35,6 +35,14 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
                 templates: {
                     type: 'array',
                     items: templateSchema,
+                },
+
+                defaults: {
+                    type: 'object',
+
+                    properties: {
+                        outDir: { type: 'string' }
+                    }
                 }
             },
 
@@ -57,6 +65,17 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
                 errMsg: 'at least one template expected in cfg',
                 ok: false
             };
+        }
+
+        if (!cfg.defaults?.outDir) {
+            for (const t of cfg.templates) {
+                if (!t.outDir) {
+                    return {
+                        ok: false,
+                        errMsg: `in template with name [${t.name}] no outDir property, set default outDir or ${t.name}.outDir`
+                    };
+                }
+            }
         }
 
         return {

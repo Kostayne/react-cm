@@ -1,7 +1,7 @@
 {
   "name": "k-react-cm",
   "description": "manages your project components from cli",
-  "version": "3.2.10",
+  "version": "3.2.12",
   "author": "kostayne",
   "bin": {
     "k-react-cm": "./bin/run"
@@ -53,7 +53,9 @@
     "react",
     "cli",
     "manager",
-    "components"
+    "components",
+    "component",
+    "react-component"
   ],
   "license": "Apache 2.0",
   "main": "index.js",
