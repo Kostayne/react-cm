@@ -99,7 +99,7 @@ export const __cname__ = () => {
 k-react-cm help // to display help
 k-react-cm create template_name component_name // to create component
 k-react-cm create template_name component_name -o out_dir_path // to override out dir
-k-react-cm create template_name component_name -s // to create subdir
+k-react-cm create template_name component_name -s // to create all in subdir
 ```
 
 ## Sources

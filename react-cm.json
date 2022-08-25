@@ -19,7 +19,13 @@
         {
             "name": "page",
             "path": "./example/templates/page",
-            "outDir": "./example/out/",
+            "outDir": "./example/out/pages"
+        },
+
+        {
+            "name": "spreaded",
+            "path": "./example/templates/spreaded",
+            "outDir": "./example/out/spreaded",
             "subDir": false
         }
     ]
