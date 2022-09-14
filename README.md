@@ -36,8 +36,15 @@ Then setup the config. You can do this in two ways. By creating seperated react-
 
     "paths": [
         // replaces @c with ./example/out in paths
-        "@c": "./example/out",
-        "@t": "./example/templates"
+        {
+            "name": "@c",
+            "value": "./example/out",
+        },
+
+        {
+            "name": "@t",
+            "value": "./example/templates"
+        }
     ],
 
     "templates": [
