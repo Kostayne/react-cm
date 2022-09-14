@@ -6,7 +6,7 @@ interface IReactCMConfigDefaults {
 
 interface IReactCMConfigPath {
     name: string;
-    path: string;
+    value: string;
 }
 
 export interface IReactCMConfig {

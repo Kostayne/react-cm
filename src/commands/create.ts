@@ -30,6 +30,10 @@ export default class CreateComponent extends Command {
     { name: 'name', required: true },
   ];
 
+  static aliases = [
+    'c',
+  ];
+
   async run() {
     const { args, flags } = this.parse(CreateComponent);
 

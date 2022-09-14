@@ -16,12 +16,24 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
                 name: { type: 'string', minLength: 1 },
                 path: { type: 'string', minLength: 3 },
                 outDir: { type: 'string', minLength: 3 },
-                subDir: { type: 'boolean' }
+                subDir: { type: 'boolean' },
             },
 
             required: ['name', 'path'],
             additionalProperties: false
-        }
+        };
+
+        const customPathSchema = {
+            type: 'object',
+            
+            properties: {
+                name: { type: 'string', minLength: 1 },
+                value: { type: 'string', minLength: 3 },
+            },
+
+            required: ['name', 'value'],
+            additionalProperties: false,
+        };
 
         const rootSchema = {
             type: 'object',
@@ -30,6 +42,11 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
                 templates: {
                     type: 'array',
                     items: templateSchema,
+                },
+
+                paths: {
+                    type: 'array',
+                    items: customPathSchema,
                 },
 
                 defaults: {
@@ -42,7 +59,7 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
             },
 
             required: ['templates'],
-            additionalProperties: false
+            additionalProperties: false,
         }
 
         const validate = ajv.compile(rootSchema);

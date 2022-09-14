@@ -21,23 +21,23 @@ export interface ICreateComponentBackend {
 }
 
 export class CreateComponentBackend implements ICreateComponentBackend {
-    protected args: CreateBackendArgs;
     protected templatePath: string = '';
     protected outDir: string = '';
-    protected cfg: IReactCMConfig | null = null;
-    protected flags: CreateBackendFlags;
     protected subdir: boolean = false;
     protected template: IReactCMTemplate | null = null;
 
-    constructor(cfg: IReactCMConfig, args: CreateBackendArgs, flags: CreateBackendFlags) {
+    constructor(
+        protected cfg: IReactCMConfig,
+        protected args: CreateBackendArgs, 
+        protected flags: CreateBackendFlags
+    ) {
         this.flags = flags;
         this.args = args;
-        this.cfg = cfg;
     }
 
     async createComponent() {
         if (!this.cfg) {
-            return console.trace('config is null or undefined!');
+            return console.error('config is null or undefined!');
         }
 
         const template = this.cfg.templates.find((t: IReactCMTemplate) => {
@@ -51,10 +51,25 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         
         // cfg already validated, so outDir can't be undefined & we cast it to str
         const cfgOutDir = (this.template.outDir || this.cfg.defaults?.outDir) as string;
-        this.outDir = this.flags.out != undefined? this.flags.out as string : cfgOutDir;
+
+        // cli parameter prioritet
+        this.outDir = this.flags.out || cfgOutDir;
+
+        // replace aliases
+        const cfgPaths = this.cfg.paths || [];
+        
+        cfgPaths.forEach(p => {
+            this.templatePath = this.templatePath.replace(p.name, p.value);
+        });
+
+        cfgPaths.forEach(p => {
+            this.outDir = this.outDir.replace(p.name, p.value);
+        });
 
         let templateStat: fs.Stats | null = null;
 
+        // check that we can read the folder
+        // (we have permissions and the folder exists)
         try {
             templateStat = await fs.promises.stat(this.templatePath);
         }

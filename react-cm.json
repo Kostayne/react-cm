@@ -3,29 +3,47 @@
         "outDir": "./example/out/"
     },
 
+    "paths": [
+        {
+            "name": "@out",
+            "value": "./example/out"
+        },
+
+        {
+            "name": "@t",
+            "value": "./example/templates"
+        }
+    ],
+
     "templates": [
         {
             "name": "cl",
-            "path": "./example/templates/cl.tsx",
+            "path": "@t/cl.tsx",
             "subDir": true
         },
 
         {
             "name": "fn",
-            "path": "./example/templates/fn.tsx",
-            "outDir": "./example/out/"
+            "path": "@t/fn.tsx"
         },
 
         {
             "name": "page",
-            "path": "./example/templates/page",
+            "path": "@t/page",
             "outDir": "./example/out/pages"
         },
 
         {
             "name": "spreaded",
-            "path": "./example/templates/spreaded",
+            "path": "@t/spreaded",
             "outDir": "./example/out/spreaded",
+            "subDir": false
+        },
+
+        {
+            "name": "spreaded_v2",
+            "path": "@t/spreaded",
+            "outDir": "@out/spreaded_v2",
             "subDir": false
         }
     ]

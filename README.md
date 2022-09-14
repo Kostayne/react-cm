@@ -22,35 +22,43 @@ npm i -g k-react-cm
 
 Then setup the config. You can do this in two ways. By creating seperated react-cm.json file in the project root or by creating reactCm field in "package.json". After that fill the config.
 
-``` ts json
+```ts
 // cfg exmaple
 // fn - single file template
 // cl - complex template
 
 {
     "defaults": {
-        "outDir": "./example/components"
+        // if you not defined outDir to the template in cfg & not defined it in cli
+        // path below will be used
+        "outDir": "@c"
     }
+
+    "paths": [
+        // replaces @c with ./example/out in paths
+        "@c": "./example/out",
+        "@t": "./example/templates"
+    ],
 
     "templates": [
         {
             "name": "fn",
-            "path": "./example/templates/fn.tsx",
+            "path": "@t/fn.tsx",
 
             // you can override default outDir
             // if outDir not set in defaults block
             // & not set in template error will occure
-            "outDir": "./example/components",
+            "outDir": "@c",
         },
 
         {
             "name": "cl",
-            "path": "./example/templates/cl",
+            "path": "@t/cl",
         },
 
         {
             "name": "page",
-            "path": "./example/templates/page",
+            "path": "@t/page",
 
             // when subDir is false
             // pages/home.tsx, pages/home.scss
@@ -71,7 +79,7 @@ If you want to create complex component (more than single file) then create a di
 
 Want to use component name inside template? Insert \_\_oname__ into the template. It will be replaced with original name. Insert \_\_cname__ to replace it with jsx component name (PascalCase). To create css selector use \_\_pname__ (it will be kebab-cased). Template file names are parsed as it's content, so when you name the file like "\_\_oname\_\_.tsx", where component name is "test", the output will be "test.tsx".
 
-``` tsx
+```tsx
 // tsx template example
 import React from "react";
 
@@ -97,9 +105,9 @@ export const __cname__ = () => {
 ```
 // commands
 k-react-cm help // to display help
-k-react-cm create template_name component_name // to create component
-k-react-cm create template_name component_name -o out_dir_path // to override out dir
-k-react-cm create template_name component_name -s // to create all in subdir
+k-react-cm (create | c) template_name component_name // to create component
+k-react-cm (create | c) template_name component_name -o out_dir_path // to override out dir
+k-react-cm (create | c) template_name component_name -s // to create all in subdir
 ```
 
 ## Sources
