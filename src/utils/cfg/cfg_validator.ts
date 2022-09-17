@@ -66,7 +66,15 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
         const valid = validate(cfg);
 
         if (!valid && validate.errors) {
-            return validate.errors.join('/n_______________/n');
+            const errorInfo = validate.errors.map(msg => {
+                return {
+                    params: msg.params,
+                    msg: msg.message,
+                };
+            });
+
+            const messagesToShow = errorInfo.map(info => JSON.stringify(info, null, 4));
+            return messagesToShow.join('/n_______________/n');
         }
 
         if (cfg.templates.length == 0) {
