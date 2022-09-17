@@ -14,8 +14,8 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
 
             properties: {
                 name: { type: 'string', minLength: 1 },
-                path: { type: 'string', minLength: 3 },
-                outDir: { type: 'string', minLength: 3 },
+                path: { type: 'string', minLength: 1 },
+                outDir: { type: 'string', minLength: 1 },
                 subDir: { type: 'boolean' },
             },
 
@@ -28,7 +28,7 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
             
             properties: {
                 name: { type: 'string', minLength: 1 },
-                value: { type: 'string', minLength: 3 },
+                value: { type: 'string', minLength: 1 },
             },
 
             required: ['name', 'value'],
