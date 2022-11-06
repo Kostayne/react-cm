@@ -44,7 +44,11 @@ export class CreateComponentBackend implements ICreateComponentBackend {
             return t.name == this.args.template;
         });
 
-        if (!template) return console.error('there is no template with that name, check your config');
+        if (!template) { 
+            console.error('There is no template with that name, check your config');
+            console.error('Templates listed in config: ', this.cfg.templates);
+            return;
+        };
 
         this.template = template;
         this.templatePath = template.path;
@@ -127,7 +131,7 @@ export class CreateComponentBackend implements ICreateComponentBackend {
             return console.error(e);
         }
 
-        const copyBaseName = this.getProcessedCopyBaseName(fileFullPath);
+        const copyBaseName = this.getNewBaseName(fileFullPath);
         const copyFullPath = this.getNewFileRelativePath(fileFullPath, copyBaseName);
         const templateLoader = new ReactCM_UniversalTemplateNameLoader();
         
@@ -150,7 +154,12 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         }
     }
 
-    protected getProcessedCopyBaseName(fileFullPath: string): string {
+    /**
+     * @param fileFullPath 
+     * @returns relativePath
+     */
+    protected getNewBaseName(fileFullPath: string): string {
+        // single file components case
         if (fileFullPath == this.templatePath) {
             return this.args.name + path.extname(fileFullPath);
         }
@@ -189,17 +198,24 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         return path.join(this.outDir, relativePath);
     }
 
+    /**
+     * @param defaultTemplateValue 
+     * @returns 
+     */
     protected getCreateSubdirProp(defaultTemplateValue: boolean): boolean {
         if (!this.template) {
             throw new Error('template is not set');
         }
 
+        // get value from template
         let createSubdir = this.template.subDir;
 
+        // if value not set in the template, use default value for current template type (file | complex)
         if (createSubdir == undefined) {
             createSubdir = defaultTemplateValue;
         }
 
+        // get value from cli
         if (this.flags.subdir != undefined) {
             createSubdir = this.flags.subdir;
         }

@@ -24,7 +24,14 @@
 
         {
             "name": "fn",
-            "path": "@t/fn.tsx"
+            "path": "@t/fn.tsx",
+
+            "rewrites": [
+                {
+                    "from": "/test.!tsx",
+                    "to": "/test.tsx"
+                }
+            ]
         },
 
         {
