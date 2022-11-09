@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './styles.scss';
 
-export const SpreadedC = () => {
+export const TestComplex = () => {
 	return (
 		<div>
 			Spreaded files component

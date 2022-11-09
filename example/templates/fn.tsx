@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const __cname__ = () => {
+export const CName = () => {
 	return (
 		<div>
 			Content

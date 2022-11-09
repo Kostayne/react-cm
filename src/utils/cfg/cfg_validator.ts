@@ -17,7 +17,7 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
                 to: { type: 'string', minLength: 1 },
             },
 
-            required: ['name', 'value'],
+            required: ['from', 'to'],
             additionalProperties: false,
         };
 

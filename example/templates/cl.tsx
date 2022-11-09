@@ -1,6 +1,6 @@
 import React from "react";
 
-export class __cname__ extends React.Component {
+export class CName extends React.Component {
 	render(): React.ReactNode {
 		return (
 			<div>

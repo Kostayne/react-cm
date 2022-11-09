@@ -1,7 +1,7 @@
 {
   "name": "k-react-cm",
   "description": "manages your project components from cli",
-  "version": "3.4.3",
+  "version": "4.0.0",
   "author": "kostayne",
   "bin": {
     "k-react-cm": "./bin/run"
@@ -68,7 +68,8 @@
   },
   "repository": "Kostayne/react-cm",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf lib && rm -f tsconfig.tsbuildinfo && tsc",
+    "build-run": "npm run build && ./bin/run",
     "postpack": "rimraf oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "tsc -b && oclif-dev manifest",

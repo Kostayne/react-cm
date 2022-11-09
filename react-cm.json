@@ -24,14 +24,7 @@
 
         {
             "name": "fn",
-            "path": "@t/fn.tsx",
-
-            "rewrites": [
-                {
-                    "from": "/test.!tsx",
-                    "to": "/test.tsx"
-                }
-            ]
+            "path": "@t/fn.tsx"
         },
 
         {
@@ -43,15 +36,19 @@
         {
             "name": "spreaded",
             "path": "@t/spreaded",
-            "outDir": "./example/out/spreaded",
             "subDir": false
         },
 
         {
-            "name": "spreaded_v2",
-            "path": "@t/spreaded",
-            "outDir": "@out/spreaded_v2",
-            "subDir": false
+            "name": "complex",
+            "path": "@t/complex",
+            
+            "rewrites": [
+                {
+                    "from": "/cname.test.!tsx",
+                    "to": "/cname.test.tsx"
+                }
+            ]
         }
     ]
 }

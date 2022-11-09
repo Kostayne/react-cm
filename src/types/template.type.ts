@@ -1,4 +1,4 @@
-import { IRewrite } from "./rewrite.type";
+import { IReactCMRewrite } from "./rewrite.type";
 
 export interface IReactCMTemplate {
     name: string;
@@ -6,5 +6,5 @@ export interface IReactCMTemplate {
     outDir: string;
     subDir?: boolean;
 
-    rewrites?: IRewrite[];
+    rewrites?: IReactCMRewrite[];
 }

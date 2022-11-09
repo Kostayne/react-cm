@@ -1,7 +1,5 @@
-/// <reference types="node" />
 import { IReactCMConfig } from "../types/cfg.type";
 import { IReactCMTemplate } from "../types/template.type";
-import * as fs from "fs";
 export interface CreateBackendArgs {
     name: string;
     template: string;
@@ -19,14 +17,21 @@ export declare class CreateComponentBackend implements ICreateComponentBackend {
     protected flags: CreateBackendFlags;
     protected templatePath: string;
     protected outDir: string;
-    protected subdir: boolean;
+    protected subDir: boolean;
     protected template: IReactCMTemplate | null;
+    protected isSingleComponent: boolean;
     constructor(cfg: IReactCMConfig, args: CreateBackendArgs, flags: CreateBackendFlags);
     createComponent(): Promise<void>;
     protected handleDir(dirFullPath: string): Promise<void>;
     protected handleFile(fileFullPath: string): Promise<void>;
-    protected getProcessedCopyBaseName(fileFullPath: string): string;
-    protected getNewFileRelativePath(fileFullPath: string, baseName: string): string;
+    protected getFinalNewRelativePath(fileFullPath: string): string;
+    protected getNewRelativePathWithSubdir(fileFullPath: string): string;
+    protected applyNameReplacer(content: string, name: string): string;
+    protected applyRewritesToPath(origRelPath: string, withSubDir: boolean): string;
+    /**
+     * @param defaultTemplateValue
+     * @returns
+     */
     protected getCreateSubdirProp(defaultTemplateValue: boolean): boolean;
-    protected isComponentExists(templateStat: fs.Stats): Promise<boolean>;
+    protected isComponentExists(): Promise<boolean>;
 }

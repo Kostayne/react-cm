@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './styles.scss';
 
-export const Cname = () => {
+export const CName = () => {
 	return (
 		<div>
 			Spreaded files component

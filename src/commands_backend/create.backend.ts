@@ -23,8 +23,9 @@ export interface ICreateComponentBackend {
 export class CreateComponentBackend implements ICreateComponentBackend {
     protected templatePath: string = '';
     protected outDir: string = '';
-    protected subdir: boolean = false;
+    protected subDir: boolean = false;
     protected template: IReactCMTemplate | null = null;
+    protected isSingleComponent = false;
 
     constructor(
         protected cfg: IReactCMConfig,
@@ -58,14 +59,14 @@ export class CreateComponentBackend implements ICreateComponentBackend {
 
         // cli parameter prioritet
         this.outDir = this.flags.out || cfgOutDir;
-
-        // replace aliases
         const cfgPaths = this.cfg.paths || [];
         
+        // apply aliases to templatePath
         cfgPaths.forEach(p => {
             this.templatePath = this.templatePath.replace(p.name, p.value);
         });
 
+        // apply aliases to outDir
         cfgPaths.forEach(p => {
             this.outDir = this.outDir.replace(p.name, p.value);
         });
@@ -89,7 +90,7 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         if (!templateStat) return;
 
         try {
-            if (await this.isComponentExists(templateStat)) {
+            if (await this.isComponentExists()) {
                 return console.log('Already exists');
             }
         } catch(e: unknown) {
@@ -97,8 +98,10 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         }
 
         if (templateStat.isDirectory()) {
+            this.isSingleComponent = false;
             this.handleDir(this.templatePath);
         } else {
+            this.isSingleComponent = true;
             this.handleFile(this.templatePath);
         }
     }
@@ -111,6 +114,7 @@ export class CreateComponentBackend implements ICreateComponentBackend {
             let dirFileStat: fs.Stats | null = null;
 
             try {
+                // check for nested file or dir access
                 dirFileStat = await fs.promises.stat(dirFileFullPath);
             } catch(e) {
                 return console.error(e);
@@ -131,12 +135,12 @@ export class CreateComponentBackend implements ICreateComponentBackend {
             return console.error(e);
         }
 
-        const copyBaseName = this.getNewBaseName(fileFullPath);
-        const copyFullPath = this.getNewFileRelativePath(fileFullPath, copyBaseName);
+        const newRelPath = this.getFinalNewRelativePath(fileFullPath);
+        const outFullPath = path.join(this.outDir, newRelPath);
         const templateLoader = new ReactCM_UniversalTemplateNameLoader();
-        
-        let fileContent: string = '';
 
+        let fileContent: string = '';
+        
         try {
             const buffer = await fs.promises.readFile(fileFullPath);
             fileContent = await buffer.toString();
@@ -147,55 +151,77 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         const processedContent = templateLoader.loadReactPMTemplate(fileContent, this.args.name);
         
         try {
-            await mkDirIfNotExists(path.dirname(copyFullPath));
-            await fs.promises.writeFile(copyFullPath, processedContent, { encoding: 'utf-8' });
+            await mkDirIfNotExists(path.dirname(outFullPath));
+            await fs.promises.writeFile(outFullPath, processedContent, { encoding: 'utf-8' });
         } catch(e) {
             return console.error(e);
         }
     }
 
-    /**
-     * @param fileFullPath 
-     * @returns relativePath
-     */
-    protected getNewBaseName(fileFullPath: string): string {
-        // single file components case
-        if (fileFullPath == this.templatePath) {
-            return this.args.name + path.extname(fileFullPath);
-        }
+    protected getFinalNewRelativePath(fileFullPath: string): string {
+        // create subdir if needed
+        let finalRelPath = this.getNewRelativePathWithSubdir(fileFullPath);
+        finalRelPath = this.applyRewritesToPath(finalRelPath, !this.isSingleComponent);
 
-        const baseName = path.basename(fileFullPath);
-        const templateLoader = new ReactCM_UniversalTemplateNameLoader();
-        return templateLoader.loadReactPMTemplate(baseName, this.args.name);
+        // replace file name to components name
+        finalRelPath = this.applyNameReplacer(finalRelPath, this.args.name);
+
+        return finalRelPath;
     }
 
-    protected getNewFileRelativePath(fileFullPath: string, baseName: string): string {
-        if (!this.cfg) throw new Error('cfg is not set');
-        if (!this.template) throw new Error('template is not set');
+    protected getNewRelativePathWithSubdir(fileFullPath: string): string {
+        const origRelPath = path.relative(this.templatePath, fileFullPath);
+        const createSubDir = this.getCreateSubdirProp(!this.isSingleComponent);
+        const extName = path.extname(fileFullPath);
 
-        // single file component case
-        if (fileFullPath == this.templatePath) {
-            const createSubdir = this.getCreateSubdirProp(false);
-
-            if (createSubdir) {
-                return path.join(this.outDir, this.args.name, baseName);
+        if (createSubDir) {
+            if (this.isSingleComponent) {
+                return path.join(this.args.name, this.args.name + extName);
             }
 
-            return path.join(this.outDir, baseName);
+            // complex component with subdir case
+            return path.join(this.args.name, origRelPath);
         }
 
-        // complex component case
-        const createSubdir = this.getCreateSubdirProp(true);
+        // single component case with subDir == false
+        // compex component case with subDir == false
+        return this.args.name + extName;
+    }
 
-        const parentDir = path.dirname(fileFullPath);
-        const renamedFileFullPath = path.join(parentDir, baseName); 
-        const relativePath = path.relative(this.templatePath, renamedFileFullPath);
+    protected applyNameReplacer(content: string, name: string) {
+        const templateLoader = new ReactCM_UniversalTemplateNameLoader();
+        return templateLoader.loadReactPMTemplate(content, name);
+    }
 
-        if (createSubdir) {
-            return path.join(this.outDir, this.args.name, relativePath);
+    protected applyRewritesToPath(origRelPath: string, withSubDir: boolean) {
+        if (!this.template) {
+            throw new Error('Template is not set! Stopping execution...');
         }
 
-        return path.join(this.outDir, relativePath);
+        const rewrites = this.template?.rewrites || [];
+        let newRelPath = origRelPath;
+
+        // looking for rewrites to apply
+        for (const r of rewrites) {
+            let fileToRewriteName = origRelPath;
+
+            if (withSubDir) {
+                fileToRewriteName = path.join(this.args.name, r.from);
+            }
+
+            // rewrite name to new one
+            if (fileToRewriteName == origRelPath) {
+                newRelPath = r.to;
+
+                if (withSubDir) {
+                    newRelPath = path.join(this.args.name, r.to);
+                }
+
+                break;
+            }
+        }
+
+        return newRelPath;
     }
 
     /**
@@ -223,14 +249,9 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         return createSubdir as boolean;
     }
 
-    protected async isComponentExists(templateStat: fs.Stats): Promise<boolean> {
+    protected async isComponentExists(): Promise<boolean> {
         if (!this.cfg) return Promise.reject(new Error('Cfg is not set'));
-
-        if (templateStat.isDirectory()) {
-            return await isFileExists(path.join(this.outDir, this.args.name));
-        } else {
-            const ext = path.extname(this.templatePath);
-            return await isFileExists(path.join(this.outDir, this.args.name + ext));
-        }
+        const ext = path.extname(this.templatePath);
+        return await isFileExists(path.join(this.outDir, this.args.name + ext));
     }
 }

@@ -1,6 +1,6 @@
 import React from "react";
 
-export class ClassC extends React.Component {
+export class TestCl extends React.Component {
 	render(): React.ReactNode {
 		return (
 			<div>

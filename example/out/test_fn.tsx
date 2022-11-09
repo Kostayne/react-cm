@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const FunctionalC = () => {
+export const TestFn = () => {
 	return (
 		<div>
 			Content

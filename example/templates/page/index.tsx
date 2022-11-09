@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './styles.scss';
 
-export const __cname__ = () => {
+export const CName = () => {
 	return (
 		<main>
 			<h1>Page title</h1>
