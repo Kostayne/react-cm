@@ -100,10 +100,10 @@ We can set default outDir to all components and omit it declaration in templates
 **K-react-cm do replaces in file name and file content!**
 
 There are few types of available component name cases:
-- **`cname`** original case (without any transform);
-- **`CName`** PascalCase;
-- **`c-name`** kebab-case;
-- **`c_name`** snake_case;
+- `cname` original case (without any transform);
+- `CName` PascalCase;
+- `c-name` kebab-case;
+- `c_name` snake_case;
 
 Example of template file names:
 ```
