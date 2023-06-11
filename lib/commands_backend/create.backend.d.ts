@@ -1,5 +1,6 @@
 import { IReactCMConfig } from "../types/cfg.type";
 import { IReactCMTemplate } from "../types/template.type";
+import { IAutoArch } from "../types/auto_arch.type";
 export interface CreateBackendArgs {
     name: string;
     template: string;
@@ -18,20 +19,16 @@ export declare class CreateComponentBackend implements ICreateComponentBackend {
     protected templatePath: string;
     protected outDir: string;
     protected subDir: boolean;
-    protected template: IReactCMTemplate | null;
-    protected isSingleComponent: boolean;
+    protected isSingleFileComponent: boolean;
+    protected template: IReactCMTemplate;
     constructor(cfg: IReactCMConfig, args: CreateBackendArgs, flags: CreateBackendFlags);
     createComponent(): Promise<void>;
     protected handleDir(dirFullPath: string): Promise<void>;
     protected handleFile(fileFullPath: string): Promise<void>;
-    protected getFinalNewRelativePath(fileFullPath: string): string;
-    protected getNewRelativePathWithSubdir(fileFullPath: string): string;
+    protected getFinalNewRelPathToOutDir(templateFileFullPath: string): string;
     protected applyNameReplacer(content: string, name: string): string;
-    protected applyRewritesToPath(origRelPath: string, withSubDir: boolean): string;
-    /**
-     * @param defaultTemplateValue
-     * @returns
-     */
-    protected getCreateSubdirProp(defaultTemplateValue: boolean): boolean;
+    protected setupFinalOutDir(): void;
+    protected getFinalSubdirProp(defaultTemplateValue: boolean): boolean;
     protected isComponentExists(): Promise<boolean>;
+    protected getUsedArches(archNames: string[]): IAutoArch[];
 }

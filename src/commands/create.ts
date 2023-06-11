@@ -1,8 +1,14 @@
 import { Command, flags } from '@oclif/command';
+
+// cmd
 import { CreateBackendArgs, CreateComponentBackend } from '../commands_backend/create.backend';
+
+// utils
 import { ReactCMConfigLoader } from '../utils/cfg/config_loader';
 import { ReactCMConfigFinder } from '../utils/cfg/config_finder';
 import { ReactCMConfigValidator } from '../utils/cfg/cfg_validator';
+
+// types
 import { CmdFlag } from '../types/cmd_flag.type';
 
 export default class CreateComponent extends Command {

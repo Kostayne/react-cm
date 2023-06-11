@@ -10,8 +10,21 @@
         },
 
         {
+            "name": "@p",
+            "value": "./example/out/pages"
+        },
+
+        {
             "name": "@t",
             "value": "./example/templates"
+        }
+    ],
+
+    "autoArches": [
+        {
+            "name": "c_arch",
+            "pathPrefix": "example/out/pages",
+            "subdirName": "components"
         }
     ],
 
@@ -42,11 +55,12 @@
         {
             "name": "complex",
             "path": "@t/complex",
-            
+            "usingArches": ["c_arch"],
+
             "rewrites": [
                 {
-                    "from": "/cname.test.!tsx",
-                    "to": "/cname.test.tsx"
+                    "from": "cname.test.!tsx",
+                    "to": "cname.test.tsx"
                 }
             ]
         }

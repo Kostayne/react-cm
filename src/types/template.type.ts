@@ -7,4 +7,5 @@ export interface IReactCMTemplate {
     subDir?: boolean;
 
     rewrites?: IReactCMRewrite[];
+    usingArches?: string[];
 }

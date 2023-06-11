@@ -2,7 +2,7 @@ React component manager (k-react-cm)
 ===================
 Manages your react components from cli. Easy to configure and extend.
 
-<!-- shileds -->
+<!-- shields -->
 
 ![npm](https://img.shields.io/npm/v/k-react-cm)
 ![npm](https://img.shields.io/npm/dm/k-react-cm)
@@ -27,10 +27,10 @@ npm i -D k-react-cm
 yarn add -D k-react-cm
 ```
 
-Then setup the config. You can do this in two ways: by creating seperated react-cm.json file in the project root or by creating reactCm field in "package.json". Info about how to fill it below.
+Then setup the config. You can do this in two ways: by creating separated react-cm.json file in the project root or by creating reactCm field in "package.json". Info about how to fill it below.
 
 ## Usage
-Check full config example if you want to start quickly, otherwise read usage sections.
+Check out full config example if you want to start quickly, otherwise read usage sections.
 
 ### Templates
 K-react-cm supports complex & single file component templates. To use template you need assign a name, the path to file or directory containing template and the out dir where components will be created.
@@ -58,7 +58,7 @@ Example of config:
 
         {
             "name": "complex",
-            "path": "./templates/compex_component",
+            "path": "./templates/complex_component",
             "outDir": "./components/"
         }
     ]
@@ -135,7 +135,7 @@ Example of css template file:
 ```
 
 ### Paths (Aliases)
-Enter all paths is not convinient, because of that aliases exist! It's very easy to use them. Just declare paths array in the config, where each alias will be object, that contains name and value. Name should begin with @ symbol, and value should refer to directory full or relative path. After aliases declarations, we can use them in config & cli.
+Enter all paths is not convenient, because of that aliases exist! It's very easy to use them. Just declare paths array in the config, where each alias will be object, that contains name and value. Name should begin with @ symbol, and value should refer to directory full or relative path. After aliases declarations, we can use them in config & cli.
 
 Example of aliases declaration:
 ``` json
@@ -166,7 +166,7 @@ Example of aliases usage in cfg file:
 ```
 
 ### Rewrites
-There are situations when some tools scan files for specific extensions and it can't ignore certain directories. So we have to name files with exitension prefixes like `.!stories.ts` or `.!test.ts`. But it quickly becomes tedious to rename file names in created components. We can use rewrites to fix this problem. We define aliases inside templates, because they are related to each other.
+There are situations when some tools scan files for specific extensions and it can't ignore certain directories. So we have to name files with extension prefixes like `.!stories.ts` or `.!test.ts`. But it quickly becomes tedious to rename file names in created components. We can use rewrites to fix this problem. We define aliases inside templates, because they are related to each other.
 
 ``` json
 {
@@ -185,6 +185,38 @@ There are situations when some tools scan files for specific extensions and it c
         }
     ]
 }
+```
+
+### Auto arches
+Auto architecture helps keep the file structure clean. No need in type full path like @p/page/components to set outDir.
+With auto arch just type @p/page and it'll be transformed to @p/page/components automatic.
+
+```json
+{
+    "autoArches": [
+        {
+            "name": "c_arch",
+            "pathPrefix": "example/out/pages",
+            "subdirName": "components"
+        }
+    ],
+
+    "templates": [
+        {
+            "name": "fn",
+            "path": "@t/fn.tsx",
+            "usingArches": ["c_arch"],
+        }
+    ]
+}
+```
+
+Auto arch in action:
+``` Bash
+# Every thing is thought out, it won't mess up your path
+-o @p/page => @p/page/components # works only with 1 nesting level
+-o @p/page/components => @p/page/components # already have components subDir, skipping
+-o @p/page/components/component => @p/page/components/component # too deep, skip
 ```
 
 ## Full config example
@@ -208,6 +240,14 @@ Here is the example of working config with various component types.
         }
     ],
 
+    "autoArches": [
+        {
+            "name": "c_arch",
+            "pathPrefix": "example/out/pages",
+            "subdirName": "components"
+        }
+    ],
+
     "templates": [
         {
             "name": "fn",
@@ -219,7 +259,9 @@ Here is the example of working config with various component types.
                     "from": "/cname.test.!tsx",
                     "to": "/cname.test.tsx"
                 }
-            ]
+            ],
+
+            "usingArches": ["c_arch"]
         },
 
         {

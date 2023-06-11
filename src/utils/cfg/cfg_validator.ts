@@ -9,6 +9,18 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
     public validateReactCMConfig(cfg: IReactCMConfig): string | undefined {
         const ajv = new Ajv();
 
+        const archSchema = {
+            type: 'object',
+
+            properties: {
+                name: { type: 'string', minLength: 1 },
+                pathPrefix: { type: 'string', minLength: 1 },
+                subdirName: { type: 'string', minLength: 1 },
+            },
+
+            required: ['name', 'pathPrefix', 'subdirName'],
+        };
+
         const rewriteSchema = {
             type: 'object',
 
@@ -33,6 +45,14 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
                 rewrites: {
                     type: 'array',
                     items: rewriteSchema,
+                },
+
+                usingArches: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                        minLength: 1,
+                    },
                 },
             },
 
@@ -64,6 +84,11 @@ export class ReactCMConfigValidator implements IReactCMConfigValidator {
                 paths: {
                     type: 'array',
                     items: customPathSchema,
+                },
+
+                autoArches: {
+                    type: 'array',
+                    items: archSchema,
                 },
                 
                 defaults: {

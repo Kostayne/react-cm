@@ -1,10 +1,20 @@
 import * as fs from "fs";
 import * as path from "path";
-import { isFileExists } from "../utils/fs/is_file_exists";
-import { ReactCM_UniversalTemplateNameLoader } from "../utils/template/universal_template_loader";
+
+// types
 import { IReactCMConfig } from "../types/cfg.type";
 import { IReactCMTemplate } from "../types/template.type";
+import { IAutoArch } from "../types/auto_arch.type";
+
+// utils
+import { isFileExists } from "../utils/fs/is_file_exists";
+import { ReactCM_UniversalTemplateNameLoader } from "../utils/template/universal_template_loader";
 import { mkDirIfNotExists } from "../utils/fs/mk_dir";
+
+// fn
+import { getRelPathWithAutoArch } from "./create/getRelPathWithAutoArch";
+import { getNewRelPathWithFnameRewrites } from "./create/getNewRelPathWithFnameRewrites";
+import { getNewOutDirPathWithSubdir } from "./create/getNewOutDirPathWithSubdir";
 
 export interface CreateBackendArgs { 
     name: string;
@@ -24,8 +34,11 @@ export class CreateComponentBackend implements ICreateComponentBackend {
     protected templatePath: string = '';
     protected outDir: string = '';
     protected subDir: boolean = false;
-    protected template: IReactCMTemplate | null = null;
-    protected isSingleComponent = false;
+    protected isSingleFileComponent = false;
+
+    // template initially undefined, but setting after load
+    // if loaded incorrect, utility will exit
+    protected template: IReactCMTemplate = undefined as unknown as IReactCMTemplate;
 
     constructor(
         protected cfg: IReactCMConfig,
@@ -41,6 +54,7 @@ export class CreateComponentBackend implements ICreateComponentBackend {
             return console.error('config is null or undefined!');
         }
 
+        // template loading
         const template = this.cfg.templates.find((t: IReactCMTemplate) => {
             return t.name == this.args.template;
         });
@@ -53,22 +67,13 @@ export class CreateComponentBackend implements ICreateComponentBackend {
 
         this.template = template;
         this.templatePath = template.path;
-        
-        // cfg already validated, so outDir can't be undefined & we cast it to str
-        const cfgOutDir = (this.template.outDir || this.cfg.defaults?.outDir) as string;
 
-        // cli parameter prioritet
-        this.outDir = this.flags.out || cfgOutDir;
         const cfgPaths = this.cfg.paths || [];
         
         // apply aliases to templatePath
         cfgPaths.forEach(p => {
+            // example: @t => templates
             this.templatePath = this.templatePath.replace(p.name, p.value);
-        });
-
-        // apply aliases to outDir
-        cfgPaths.forEach(p => {
-            this.outDir = this.outDir.replace(p.name, p.value);
         });
 
         let templateStat: fs.Stats | null = null;
@@ -97,13 +102,14 @@ export class CreateComponentBackend implements ICreateComponentBackend {
             return console.error(e);
         }
 
-        if (templateStat.isDirectory()) {
-            this.isSingleComponent = false;
-            this.handleDir(this.templatePath);
-        } else {
-            this.isSingleComponent = true;
-            this.handleFile(this.templatePath);
-        }
+        this.isSingleFileComponent = !templateStat.isDirectory();
+        this.setupFinalOutDir();
+
+        const processTemplate = this.isSingleFileComponent ? 
+            this.handleFile : this.handleDir;
+
+        // consider floating this, we need use call fn
+        processTemplate.call(this, this.templatePath);
     }
 
     protected async handleDir(dirFullPath: string) {
@@ -129,14 +135,8 @@ export class CreateComponentBackend implements ICreateComponentBackend {
     }
 
     protected async handleFile(fileFullPath: string) {
-        try {
-            await fs.promises.stat(fileFullPath);
-        } catch(e) {
-            return console.error(e);
-        }
-
-        const newRelPath = this.getFinalNewRelativePath(fileFullPath);
-        const outFullPath = path.join(this.outDir, newRelPath);
+        const newRelPath = this.getFinalNewRelPathToOutDir(fileFullPath);
+        const writePath = path.join(this.outDir, newRelPath);
         const templateLoader = new ReactCM_UniversalTemplateNameLoader();
 
         let fileContent: string = '';
@@ -144,48 +144,37 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         try {
             const buffer = await fs.promises.readFile(fileFullPath);
             fileContent = await buffer.toString();
-        } catch(e) {
-            return console.error(e);
-        }
 
-        const processedContent = templateLoader.loadReactPMTemplate(fileContent, this.args.name);
+            const processedContent = templateLoader.loadReactPMTemplate(fileContent, this.args.name);
         
-        try {
-            await mkDirIfNotExists(path.dirname(outFullPath));
-            await fs.promises.writeFile(outFullPath, processedContent, { encoding: 'utf-8' });
+            await mkDirIfNotExists(path.dirname(writePath));
+            await fs.promises.writeFile(writePath, processedContent, { encoding: 'utf-8' });
         } catch(e) {
             return console.error(e);
         }
     }
 
-    protected getFinalNewRelativePath(fileFullPath: string): string {
-        // create subdir if needed
-        let finalRelPath = this.getNewRelativePathWithSubdir(fileFullPath);
-        finalRelPath = this.applyRewritesToPath(finalRelPath, !this.isSingleComponent);
+    protected getFinalNewRelPathToOutDir(templateFileFullPath: string): string {
+        // if it's single file component, 
+        // then templateFileFullPath == templatePath
+        // example: TestComponent + .tsx
+        if (this.isSingleFileComponent) {
+            const ext = path.extname(this.templatePath);
+            return this.args.name + ext;
+        }
+
+        // index.tsx
+        const origRelPath = path.relative(this.templatePath, templateFileFullPath);
+
+        // rewrites file names
+        // example: cname.test.!tsx => cname.test.tsx
+        let finalRelPath = getNewRelPathWithFnameRewrites(this.template, origRelPath);
 
         // replace file name to components name
+        // example: cname.tsx => TestC.tsx
         finalRelPath = this.applyNameReplacer(finalRelPath, this.args.name);
 
         return finalRelPath;
-    }
-
-    protected getNewRelativePathWithSubdir(fileFullPath: string): string {
-        const origRelPath = path.relative(this.templatePath, fileFullPath);
-        const createSubDir = this.getCreateSubdirProp(!this.isSingleComponent);
-        const extName = path.extname(fileFullPath);
-
-        if (createSubDir) {
-            if (this.isSingleComponent) {
-                return path.join(this.args.name, this.args.name + extName);
-            }
-
-            // complex component with subdir case
-            return path.join(this.args.name, origRelPath);
-        }
-
-        // single component case with subDir == false
-        // compex component case with subDir == false
-        return this.args.name + extName;
     }
 
     protected applyNameReplacer(content: string, name: string) {
@@ -193,42 +182,41 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         return templateLoader.loadReactPMTemplate(content, name);
     }
 
-    protected applyRewritesToPath(origRelPath: string, withSubDir: boolean) {
-        if (!this.template) {
-            throw new Error('Template is not set! Stopping execution...');
+    protected setupFinalOutDir(): void {
+        // cfg already validated, so outDir can't be undefined & we cast it to str
+        const cfgOutDir = (this.template.outDir || this.cfg.defaults?.outDir) as string;
+        const cfgPaths = this.cfg.paths || [];
+
+        // cli parameter priority
+        this.outDir = this.flags.out || cfgOutDir;
+
+        // apply aliases to outDir
+        cfgPaths.forEach(p => {
+            // example: @p => src/pages
+            this.outDir = this.outDir.replace(p.name, p.value);
+        });
+
+        // normalize out dir
+        // make sure that paths with ./ will work too
+        if (this.outDir.startsWith('./')) {
+            this.outDir = this.outDir.slice(2);
         }
 
-        const rewrites = this.template?.rewrites || [];
-        let newRelPath = origRelPath;
+        // apply auto arch
+        const arches = this.getUsedArches(this.template.usingArches || []);
+        this.outDir = getRelPathWithAutoArch(arches, this.outDir);
 
-        // looking for rewrites to apply
-        for (const r of rewrites) {
-            let fileToRewriteName = origRelPath;
+        // apply subdir
+        const withSubdir = this.getFinalSubdirProp(!this.isSingleFileComponent);
 
-            if (withSubDir) {
-                fileToRewriteName = path.join(this.args.name, r.from);
-            }
-
-            // rewrite name to new one
-            if (fileToRewriteName == origRelPath) {
-                newRelPath = r.to;
-
-                if (withSubDir) {
-                    newRelPath = path.join(this.args.name, r.to);
-                }
-
-                break;
-            }
-        }
-
-        return newRelPath;
+        this.outDir = getNewOutDirPathWithSubdir(this.outDir, {
+            createSubDir: withSubdir,
+            componentName: this.args.name,
+            isSingleFileComponent: this.isSingleFileComponent,
+        });
     }
 
-    /**
-     * @param defaultTemplateValue 
-     * @returns 
-     */
-    protected getCreateSubdirProp(defaultTemplateValue: boolean): boolean {
+    protected getFinalSubdirProp(defaultTemplateValue: boolean): boolean {
         if (!this.template) {
             throw new Error('template is not set');
         }
@@ -236,13 +224,14 @@ export class CreateComponentBackend implements ICreateComponentBackend {
         // get value from template
         let createSubdir = this.template.subDir;
 
-        // if value not set in the template, use default value for current template type (file | complex)
+        // if value not set in the template, use default value 
+        // for current template type (single file | complex)
         if (createSubdir == undefined) {
             createSubdir = defaultTemplateValue;
         }
 
         // get value from cli
-        if (this.flags.subdir != undefined) {
+        if (this.flags.subdir !== undefined) {
             createSubdir = this.flags.subdir;
         }
 
@@ -250,8 +239,53 @@ export class CreateComponentBackend implements ICreateComponentBackend {
     }
 
     protected async isComponentExists(): Promise<boolean> {
-        if (!this.cfg) return Promise.reject(new Error('Cfg is not set'));
-        const ext = path.extname(this.templatePath);
-        return await isFileExists(path.join(this.outDir, this.args.name + ext));
+        if (!this.cfg) {
+            return Promise.reject(new Error('Cfg is not set'));
+        }
+
+        if (this.isSingleFileComponent) {
+            const ext = path.extname(this.templatePath);
+            return isFileExists(path.join(this.outDir, this.args.name + ext));
+        }
+
+        return isFileExists(this.outDir);
+    }
+
+    protected getUsedArches(archNames: string[]) {
+        if (archNames.length == 0) {
+            return [];
+        }
+
+        if (!this.cfg.autoArches) {
+            console.error('Used auto arches feature while not set any!');
+            process.exit(1);
+        }
+
+        // ts yells at me that this.cfg.autoArches may be undefined...
+        // so to fix it without ugly casting i added this const
+        const cfgArches = this.cfg.autoArches;
+
+        const foundedArches: IAutoArch[] = [];
+        const notFoundedArchNames: string[] = [];
+
+        archNames.forEach(archName => {
+            const arch = cfgArches.find(curArch => curArch.name === archName);
+
+            if (arch) {
+                foundedArches.push(arch);
+            }
+
+            if (!arch) {
+                notFoundedArchNames.push(archName);
+            }
+        });
+
+        // log not founded arches
+        if (notFoundedArchNames.length > 0) {
+            console.error(`These arches are not exist: ${notFoundedArchNames.join(', ')}`);
+            process.exit(1);
+        }
+
+        return foundedArches;
     }
 }
